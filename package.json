@@ -1,0 +1,19 @@
+{
+  "name": "codenames",
+  "version": "1.0.0",
+  "description": "- It should work without signup",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "bun ./api/index.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {},
+  "dependencies": {
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "socket.io": "^4.7.1",
+    "uuid": "^9.0.0"
+  }
+}
