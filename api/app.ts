@@ -27,6 +27,7 @@ export function getApp({ dbFile }: { dbFile: string }) {
   app.use(appMiddleware);
 
   app.use(express.static("public"));
+  app.use(express.json());
 
   app.use("/api/user", userRouter);
 
