@@ -1,6 +1,6 @@
 
 import { v4 } from "uuid";
-import { OrmType } from "./orm";
+import { OrmType } from "../db/orm";
 import { generateMnemonic } from "bip39";
 
 export type Room = {
@@ -54,47 +54,6 @@ export const roomRepo = (orm: OrmType) => {
     return getByName({ name });
   };
 
-  const getClues = ({ room_id }: { room_id: string }) => {
-    const clues = orm.query<any>({
-      from: 'clues',
-      where: { room_id },
-      order_by: 'created_at desc'
-    });
-
-    return clues.map(clue => ({ ...clue, votes: JSON.parse(clue.votes) })) as Clue[];
-  };
-
-  const getActiveClue = ({ room_id }: { room_id: string }) => {
-    const [clue = null] = orm.query<any>({
-      from: 'clues',
-      where: { room_id, status: 'active' }
-    });
-    return clue && { ...clue, votes: JSON.parse(clue.votes) } as Clue;
-  };
-
-  const createClue = ({ room_id, user_id, word, count }: { room_id: string, user_id: string, word: string, count: number }) => {
-    orm.insert({
-      into: 'clues',
-      data: {
-        room_id,
-        user_id,
-        word,
-        count,
-        status: 'active',
-        votes: JSON.stringify([]),
-      }
-    });
-  };
-
-  const finishClue = ({ room_id }: { room_id: string }) => {
-    const [clue = null] = orm.update<any>({
-      table: 'clues',
-      where: { room_id, status: 'active' },
-      set: { status: 'finished' }
-    });
-    return clue && { ...clue, votes: JSON.parse(clue.votes) } as Clue;
-  };
-
   const updateStatus = ({ room_id, status }: {
     room_id: string,
     status: 'lobby' | 'playing' | 'finished'
@@ -108,13 +67,13 @@ export const roomRepo = (orm: OrmType) => {
   };
 
   const getShownCards = ({ room_id }: { room_id: string }) => {
-    const cards = orm.query<number>({
-      from: 'shown_cards s join room_clues rc on s.clue_id = rc.clue_id',
-      where: { 'rc.room_id': room_id },
+    const cards = orm.query<{card_idx: number}>({
+      from: 'shown_cards s join clues c using(clue_id)',
+      where: { 'c.room_id': room_id },
       select: 's.card_idx'
     });
 
-    return cards;
+    return cards.map(({ card_idx }) => card_idx);
   };
 
   return {
@@ -123,11 +82,6 @@ export const roomRepo = (orm: OrmType) => {
     getById,
     updateStatus,
     getShownCards,
-
-    getClues,
-    getActiveClue,
-    createClue,
-    finishClue,
   };
 };
 

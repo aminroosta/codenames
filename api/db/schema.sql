@@ -24,21 +24,28 @@ create table room_users (
 
 create index room_users_room_id_user_id_idx on room_users(room_id, user_id);
 
-create table room_clues (
+create table clues (
   clue_id uuid primary key not null,
   room_id uuid not null references rooms(room_id),
   user_id uuid not null references users(user_id),
-  clue text not null,
+  word text not null,
   count int not null,
-  votes jsonb not null, -- [['Jon', ...],...]
+  status text not null, -- active, finished
   created_at timestamp not null default current_timestamp
 );
 
-create index room_clues_room_id_created_at_idx on room_clues(room_id, created_at);
+create index clues_room_id_created_at_idx on clues(room_id, created_at);
+create unique index clues_room_id_status_idx on clues(room_id) where status = 'active';
 
 create table shown_cards (
-  clue_id uuid not null references room_clues(clue_id),
+  clue_id uuid not null references clues(clue_id),
   user_id uuid not null references users(user_id),
   card_idx int not null,
   created_at timestamp not null default current_timestamp
+);
+
+create table votes (
+  clue_id uuid not null references clues(clue_id),
+  user_id uuid not null references users(user_id),
+  card_idx int not null
 );

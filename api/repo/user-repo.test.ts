@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
 import { v4 } from "uuid";
 import { userRepo } from "./user-repo";
-import { getOrm } from "./orm-factory";
+import { getOrm } from "../db/orm-factory";
 
 
 test("user repo", () => {

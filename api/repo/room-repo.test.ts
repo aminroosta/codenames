@@ -1,11 +1,9 @@
 import { expect, test } from "bun:test";
-import { v4 } from "uuid";
-import { getOrm } from "./orm-factory";
+import { getOrm } from "../db/orm-factory";
 import { roomRepo } from "./room-repo";
 import { userRepo } from "./user-repo";
 
-
-test("roomRepo", () => {
+test("room repo", () => {
   const orm = getOrm(":memory:")
   const repo = roomRepo(orm);
 

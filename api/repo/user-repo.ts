@@ -1,5 +1,5 @@
 import { v4 } from "uuid";
-import { OrmType } from "./orm";
+import { OrmType } from "../db/orm";
 
 export type User = {
   user_id: string;
