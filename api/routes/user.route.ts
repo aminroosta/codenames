@@ -1,5 +1,5 @@
 import express from "express";
-import { userRepo } from "../db/user-repo";
+import { userRepo } from "../repo/user-repo";
 
 const router = express.Router();
 
