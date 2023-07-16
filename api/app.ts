@@ -1,7 +1,7 @@
 import express from "express";
 import session from "express-session";
 import * as uuid from "uuid";
-import { Orm, getOrm } from "./db/db";
+import { getOrm } from "./db/orm-factory";
 import userRouter from "./routes/user.route";
 
 export function getApp({ dbFile }: { dbFile: string }) {
@@ -37,7 +37,7 @@ export function getApp({ dbFile }: { dbFile: string }) {
 declare global {
   namespace Express {
     interface Request {
-      orm: Orm;
+      orm: RetunrType<typeof getOrm>;
       user_id: string;
     }
   }

@@ -1,31 +1,17 @@
-import express from 'express';
+import express from "express";
+import { userRepo } from "../db/user-repo";
 
 const router = express.Router();
 
-router.get('/', ({ orm, session }, res) => {
+router.get("/", ({ orm, session }, res) => {
   const user_id = session.id;
-  const [user = null] = orm.query({ from: 'users', where: { user_id } });
-
+  const user = userRepo(orm).get({ user_id });
   res.json(user);
 });
 
-router.post('/', ({ orm, session, body }, res) => {
+router.post("/", ({ orm, session, body }, res) => {
   const user_id = session.id;
-  let [user = null] = orm.query({ from: 'users', where: { user_id } });
-  if (!user) {
-    user = orm.insert({
-      into: 'users',
-      data: { user_id, nickname: body.nickname }
-    });
-  }
-  else {
-    user = orm.update({
-      table: 'users',
-      where: { user_id },
-      set: { nickname: body.nickname }
-    })[0];
-  }
-
+  const user = userRepo(orm).upsert({ user_id, nickname: body.nickname });
   res.json(user);
 });
 

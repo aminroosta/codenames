@@ -62,7 +62,7 @@ create table shown (
 GET /api/user -- get user info
 POST /api/user -d "{nickname: string}" -- create or update user with nickname
 
-POST /room/create -d "{nickname: string}" -- create room
+POST /room -- create a new room
 GET /room/name -- get room info
 type room_info = {
   name: string,
