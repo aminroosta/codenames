@@ -49,3 +49,5 @@ GET /room/status
 - Try to guess a word.
 - The opponent operatives are playing, wait for your turn ...
 ```
+Main page background:
+radial-gradient(circle at 50% 50%, #e7663c 0%, #480C02 100%)
