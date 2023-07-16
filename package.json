@@ -1,26 +1,25 @@
 {
   "name": "codenames",
-  "version": "1.0.0",
-  "description": "- It should work without signup",
-  "main": "index.js",
-  "type": "module",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "start": "bun ./api/index.ts"
-  },
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@types/node": "^20.4.2",
-    "@types/supertest": "^2.0.12",
-    "@types/uuid": "^9.0.2",
-    "bun-types": "^0.6.14",
-    "supertest": "^6.3.3"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
-    "bip39": "^3.1.0",
-    "express": "^4.18.2",
-    "express-session": "^1.17.3",
-    "socket.io": "^4.7.1",
-    "uuid": "^9.0.0"
+    "@types/node": "20.4.2",
+    "@types/react": "18.2.15",
+    "@types/react-dom": "18.2.7",
+    "autoprefixer": "10.4.14",
+    "eslint": "8.45.0",
+    "eslint-config-next": "13.4.10",
+    "next": "13.4.10",
+    "postcss": "8.4.26",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "tailwindcss": "3.3.3",
+    "typescript": "5.1.6"
   }
 }
