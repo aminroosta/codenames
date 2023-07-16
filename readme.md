@@ -22,7 +22,7 @@ create table rooms (
   name text not null,
   owner_id uuid not null references users(user_id),
   cards jsonb not null, -- [{image: 'card-0.jpg', color: 'red'}, ...]
-  status text not null, -- waiting, playing, finished
+  status text not null, -- lobby, playing, finished
 );
 
 create unique index room_name_idx on rooms(name);

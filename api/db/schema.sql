@@ -6,8 +6,8 @@ create table users (
 
 create table rooms (
   room_id uuid primary key not null,
-  name text not null,
   owner_id uuid not null references users(user_id),
+  name text not null, -- 3 words separated by hyphens
   cards jsonb not null, -- [{image: 'card-0.jpg', color: 'red'}, ...]
   status text not null -- waiting, playing, finished
 );
