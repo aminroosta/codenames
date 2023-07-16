@@ -6,7 +6,7 @@ export type Condition = Record<string, Value>;
 
 
 export function Orm(db: Database) {
-  function all<R = any>(query: string, values: Value[]): R[] {
+  function all<R = Row>(query: string, values: Value[]): R[] {
     try {
       return db.prepare(query).all(...values) as any as R[];
     } catch (error: any) {
@@ -227,18 +227,20 @@ export function Orm(db: Database) {
    * });
    * ```
    */
-  function query<R = unknown>({
+  function query<R = Row>({
     select = "*",
     from,
     where,
     group_by,
     having,
+    order_by,
   }: {
     select?: string | string[] | Record<string, string>;
     from: string;
     group_by?: string;
     where?: Condition | Condition[];
     having?: Condition | Condition[];
+    order_by?: string;
   }): R[] {
     const sql_: string[] = [];
     const values_: Value[] = [];
@@ -255,6 +257,9 @@ export function Orm(db: Database) {
         sql_.push("HAVING", sql);
         values_.push(...values);
       }
+    }
+    if (order_by) {
+      sql_.push("ORDER BY", order_by);
     }
 
     const query_ = sql_.join(" ") + ";";
@@ -274,7 +279,7 @@ export function Orm(db: Database) {
    * // [{id: 1, title: "Carry On"}]
    * ```
    */
-  function remove<R = unknown>(
+  function remove<R = Row>(
     {
       from,
       where,
@@ -313,7 +318,7 @@ export function Orm(db: Database) {
    * // [{id: 1, title: "Carry On!"}]
    * ```
    */
-  function update<R = unknown>(
+  function update<R = Row>(
     {
       table,
       set,

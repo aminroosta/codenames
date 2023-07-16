@@ -39,13 +39,15 @@ create index room_users_room_id_user_id_idx on room_users(room_id, user_id);
 create table room_clues (
   room_id uuid not null references rooms(room_id),
   user_id uuid not null references users(user_id),
-  clue text not null,
+  word text not null,
   count int not null,
+  status text not null, -- active, finished
   votes jsonb not null, -- [['Jon', ...],...]
   created_at timestamp not null default now()
 );
 
 create index room_clues_room_id_created_at_idx on room_clues(room_id, created_at);
+create unique index room_clues_room_id_status_idx on room_clues(room_id) where status = 'active';
 
 create table shown (
   clue_id uuid not null references room_clues(clue_id),

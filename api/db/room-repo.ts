@@ -14,17 +14,24 @@ export type Room = {
   status: 'lobby' | 'playing' | 'finished';
 };
 
-export const roomRepo = (orm: OrmType) => {
-  const get = ({ name }: { name: string }) => {
+export type Clue = {
+  room_id: string;
+  user_id: string;
+  word: string;
+  count: number;
+  votes: string[][]; // [[nickname], ...]
+  status: 'active' | 'finished';
+  created_at: Date;
+};
 
-    const [room] = orm.query<any>({ from: "rooms", where: { name } })
-    if (room) {
-      return {
-        ...room,
-        cards: JSON.parse(room.cards)
-      } as Room;
-    }
-    return null;
+export const roomRepo = (orm: OrmType) => {
+  const getByName = ({ name }: { name: string }) => {
+    const [room = null] = orm.query<any>({ from: "rooms", where: { name } })
+    return room && { ...room, cards: JSON.parse(room.cards) } as Room;
+  };
+  const getById = ({ room_id }: { room_id: string }) => {
+    const [room = null] = orm.query<any>({ from: "rooms", where: { room_id } })
+    return room && { ...room, cards: JSON.parse(room.cards) } as Room;
   };
 
   const create = ({ user_id }: { user_id: string }) => {
@@ -44,12 +51,60 @@ export const roomRepo = (orm: OrmType) => {
       },
     });
 
-    return get({ name });
+    return getByName({ name });
   };
+
+  const getClues = ({ room_id }: { room_id: string }) => {
+    const clues = orm.query<any>({
+      from: 'clues',
+      where: { room_id },
+      order_by: 'created_at desc'
+    });
+
+    return clues.map(clue => ({ ...clue, votes: JSON.parse(clue.votes) })) as Clue[];
+  };
+
+  const getActiveClue = ({ room_id }: { room_id: string }) => {
+    const [clue = null] = orm.query<any>({
+      from: 'clues',
+      where: { room_id, status: 'active' }
+    });
+    return clue && { ...clue, votes: JSON.parse(clue.votes) } as Clue;
+  };
+
+  const createClue = ({ room_id, user_id, word, count }: { room_id: string, user_id: string, word: string, count: number }) => {
+    orm.insert({
+      into: 'clues',
+      data: {
+        room_id,
+        user_id,
+        word,
+        count,
+        status: 'active',
+        votes: JSON.stringify([]),
+      }
+    });
+  };
+
+  const finishClue = ({ room_id }: { room_id: string }) => {
+    const [clue = null] = orm.update<any>({
+      table: 'clues',
+      where: { room_id, status: 'active' },
+      set: { status: 'finished' }
+    });
+    return clue && { ...clue, votes: JSON.parse(clue.votes) } as Clue;
+  };
+
+  // const info = (room: Room, clues: Clue[]) => {
+  //   const { cards } = room;
+  // };
 
   return {
     create,
-    get,
+    getByName,
+    getById,
+    getClues,
+    getActiveClue,
   };
 };
 
