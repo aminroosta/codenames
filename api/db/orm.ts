@@ -1,9 +1,8 @@
-import { Database } from "bun:sqlite";
+import { Database } from "better-sqlite3";
 
 export type Row = Record<string, string | number | null | ArrayBuffer>;
 export type Value = string | number | null | ArrayBuffer;
 export type Condition = Record<string, Value>;
-
 
 export function Orm(db: Database) {
   function all<R = Row>(query: string, values: Value[]): R[] {
@@ -11,9 +10,11 @@ export function Orm(db: Database) {
       return db.prepare(query).all(...values) as any as R[];
     } catch (error: any) {
       error.message += [
-        "\n       ", query,
-        "\n       ", JSON.stringify({ values })
-      ].join('');
+        "\n       ",
+        query,
+        "\n       ",
+        JSON.stringify({ values }),
+      ].join("");
       throw error;
     }
   }
@@ -30,9 +31,7 @@ export function Orm(db: Database) {
    * // { id: 1, name: "bob", age: 30 }
    * ```
    */
-  function insert<R>(
-    { into, data }: { into: string; data: R }
-  ) : R {
+  function insert<R>({ into, data }: { into: string; data: R }): R {
     const keys = Object.keys(data);
     const values = Object.values(data);
 
@@ -42,14 +41,14 @@ export function Orm(db: Database) {
     const query = `INSERT INTO ${into} (${keys_}) VALUES (${values_}) RETURNING *;`;
 
     try {
-      return db
-        .prepare(query)
-        .get(...values) as any as R;
+      return db.prepare(query).get(...values) as any as R;
     } catch (error: any) {
       error.message += [
-        "\n       ", query,
-        "\n       ", JSON.stringify({ values })
-      ].join('');
+        "\n       ",
+        query,
+        "\n       ",
+        JSON.stringify({ values }),
+      ].join("");
       throw error;
     }
   }
@@ -71,9 +70,7 @@ export function Orm(db: Database) {
    * // ]
    * ```
    */
-  function insertMany(
-    { into, data }: { into: string; data: Row[] }
-  ) {
+  function insertMany({ into, data }: { into: string; data: Row[] }) {
     const keys = Object.keys(data[0]);
     const keys_ = keys.join(",");
 
@@ -279,15 +276,13 @@ export function Orm(db: Database) {
    * // [{id: 1, title: "Carry On"}]
    * ```
    */
-  function remove<R = Row>(
-    {
-      from,
-      where,
-    }: {
-      from: string;
-      where?: Condition | Condition[];
-    }
-  ) : R[] {
+  function remove<R = Row>({
+    from,
+    where,
+  }: {
+    from: string;
+    where?: Condition | Condition[];
+  }): R[] {
     const sql_: string[] = [];
     const values_: Value[] = [];
     sql_.push("DELETE FROM", from);
@@ -318,17 +313,15 @@ export function Orm(db: Database) {
    * // [{id: 1, title: "Carry On!"}]
    * ```
    */
-  function update<R = Row>(
-    {
-      table,
-      set,
-      where,
-    }: {
-      table: string;
-      set: Record<string, Value>;
-      where?: Condition | Condition[];
-    }
-  ) : R[] {
+  function update<R = Row>({
+    table,
+    set,
+    where,
+  }: {
+    table: string;
+    set: Record<string, Value>;
+    where?: Condition | Condition[];
+  }): R[] {
     const sql_: string[] = [];
     const values_: Value[] = [];
     sql_.push("UPDATE", table);

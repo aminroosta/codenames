@@ -1,18 +1,18 @@
-import { Database } from "bun:sqlite";
+import Database, { Database as DB } from "better-sqlite3";
 import fs from "node:fs";
 import { Orm, OrmType } from "./orm";
 
-export function initialize(db: Database) {
+export function initialize(db: DB) {
   fs.readFileSync(__dirname + "/schema.sql", { encoding: "utf-8" })
     .split(";")
-    .map(statement => statement.trim())
-    .filter(statement => statement)
+    .map((statement) => statement.trim())
+    .filter((statement) => statement)
     .forEach((statement) => {
-      db.run(statement);
+      db.exec(statement);
     });
 }
 
-let db: Database | null = null;
+let db: DB | null = null;
 
 export function getOrm(file: string): OrmType {
   if (file == ":memory:") {
@@ -27,4 +27,3 @@ export function getOrm(file: string): OrmType {
 
   return Orm(db);
 }
-

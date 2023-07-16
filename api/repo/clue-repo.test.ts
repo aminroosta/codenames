@@ -1,12 +1,10 @@
-
-import { expect, test } from "bun:test";
 import { getOrm } from "../db/orm-factory";
 import { clueRepo } from "./clue-repo";
 import { userRepo } from "./user-repo";
 import { roomRepo } from "./room-repo";
 
 
-test("clue repo", () => {
+it("clue repo", () => {
   const orm = getOrm(":memory:");
   const repo = clueRepo(orm);
   const user = userRepo(orm).upsert({ nickname: "Jon" });
