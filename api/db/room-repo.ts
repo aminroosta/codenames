@@ -5,7 +5,7 @@ import { generateMnemonic } from "bip39";
 
 export type Room = {
   room_id: string;
-  owner_id: string;
+  user_id: string;
   name: string;
   cards: {
     image: string,
@@ -43,7 +43,7 @@ export const roomRepo = (orm: OrmType) => {
     orm.insert({
       into: "rooms",
       data: {
-        owner_id: user_id,
+        user_id,
         room_id: v4(),
         name,
         cards: JSON.stringify(cards),
@@ -95,16 +95,39 @@ export const roomRepo = (orm: OrmType) => {
     return clue && { ...clue, votes: JSON.parse(clue.votes) } as Clue;
   };
 
-  // const info = (room: Room, clues: Clue[]) => {
-  //   const { cards } = room;
-  // };
+  const updateStatus = ({ room_id, status }: {
+    room_id: string,
+    status: 'lobby' | 'playing' | 'finished'
+  }) => {
+    const [room] = orm.update<any>({
+      table: 'rooms',
+      where: { room_id },
+      set: { status }
+    });
+    return room && { ...room, cards: JSON.parse(room.cards) } as Room;
+  };
+
+  const getShownCards = ({ room_id }: { room_id: string }) => {
+    const cards = orm.query<number>({
+      from: 'shown_cards s join room_clues rc on s.clue_id = rc.clue_id',
+      where: { 'rc.room_id': room_id },
+      select: 's.card_idx'
+    });
+
+    return cards;
+  };
 
   return {
     create,
     getByName,
     getById,
+    updateStatus,
+    getShownCards,
+
     getClues,
     getActiveClue,
+    createClue,
+    finishClue,
   };
 };
 

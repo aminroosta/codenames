@@ -49,7 +49,7 @@ create table room_clues (
 create index room_clues_room_id_created_at_idx on room_clues(room_id, created_at);
 create unique index room_clues_room_id_status_idx on room_clues(room_id) where status = 'active';
 
-create table shown (
+create table shown_cards (
   clue_id uuid not null references room_clues(clue_id),
   user_id uuid not null references users(user_id),
   card_idx int not null,

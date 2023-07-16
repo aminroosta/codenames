@@ -1,3 +1,4 @@
+import { v4 } from "uuid";
 import { OrmType } from "./orm";
 
 export type User = {
@@ -5,7 +6,7 @@ export type User = {
   nickname: string;
 };
 export const userRepo = (orm: OrmType) => {
-  const upsert = ({ user_id, nickname }) => {
+  const upsert = ({ user_id = v4(), nickname }: { user_id?: string, nickname: string }) => {
     let [user = null] = orm.query<User>({ from: "users", where: { user_id } });
     if (!user) {
       user = orm.insert({
