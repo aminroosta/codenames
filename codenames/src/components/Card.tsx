@@ -11,16 +11,19 @@ export default function Card(p: {
   status: RoomStatus;
   role: UserRole;
 }) {
+  const isSpymaster = () => ['red-spymaster', 'blue-spymaster'].includes(p.role);
+  const isOperator = () => ['red-operator', 'blue-operator'].includes(p.status);
+  const canVote = () => isOperator() && p.status == p.role;
+  const revealed = () => p.face == 'up' || isSpymaster();
 
-  const hueDeg = () => p.face == 'down' ? 0 : p.color == 'blue' ? 120 : p.color == 'red' ? 300 : 0;
-  const hueSat = () => p.face == 'down' ? 100 : 250;
+  const hueDeg = () => !revealed() ? 0 : p.color == 'blue' ? 120 : p.color == 'red' ? 220 : 0;
+  const hueSat = () => !revealed() ? 100 : 250;
+
   const yCalc = () => {
     const step = p.color == 'blue' || p.color == 'red' ? 100 / 8.0
       : p.color == 'neutral' ? 100 / 5.0 : 0;
     return `calc(${step.toFixed(2)}% * ${p.index} - 2px)`;
   }
-  const isOperator = () => ['red-operator', 'blue-operator'].includes(p.status);
-  const canVote = () => isOperator() && p.status == p.role;
 
   return (
     <div

@@ -57,7 +57,7 @@ export default function Clue(p: {
           const { word, count } = clue();
           p.onDone({ word, count });
         }}
-        disabled={clue().word.length === 0 || clue().count === 0}
+        disabled={clue().word.length === 0 || clue().count === null}
       >
         Give Clue
       </button>
