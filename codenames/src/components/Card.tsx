@@ -10,8 +10,8 @@ export default function Card(p: {
   votable?: boolean;
 }) {
 
-  const hueDeg = () => p.face == 'down' ? 0 : p.color == 'blue' ? 120 : p.color == 'red' ? 320 : 0;
-  const hueSat = () => p.face == 'down' ? 0 : 150;
+  const hueDeg = () => p.face == 'down' ? 0 : p.color == 'blue' ? 120 : p.color == 'red' ? 300 : 0;
+  const hueSat = () => p.face == 'down' ? 100 : 250;
   return (
     <div class="card">
       <img
@@ -30,7 +30,7 @@ export default function Card(p: {
       <Show when={p.votable}>
         <div class="vote-count">{p.votes.length}</div>
         <div class="votes">{p.votes.join(', ')}</div>
-        <img class="tap-card" src="/docs/tap-card.svg" alt="tap" />
+        <button class="tap-card" />
       </Show>
     </div>
   );

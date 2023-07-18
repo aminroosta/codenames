@@ -14,7 +14,7 @@ export default function Home() {
       aspect-ratio: 1;
     }
   `}</Style>
-  const votes = ['Amin', 'Negar', 'Reza', 'Hamid', 'Yosof', 'Abdol hamid'];
+  const votes = ['Amin', 'Negar', 'Reza', 'Hamid', 'Yosof'];
   return (
     <div class="card-story">
       <Card image="card-0.svg" color="blue" face="up" index={0} votes={[]} votable />

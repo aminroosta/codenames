@@ -21,7 +21,7 @@
   position: absolute;
   left: 2%;
   top: 2%;
-  border: 1px solid blue;
+  border: 1px solid black;
   border-radius: 50%;
   width: 2.5vw;
   height: 2.5vw;
@@ -38,8 +38,16 @@
 
 .tap-card {
   position: absolute;
-  top: 0;
-  right: 0;
-  width: 3.5vw;
-  height: 3.5vw;
+  top: 2%;
+  right: 2%;
+  width: 3vw;
+  height: 3vw;
+  border-radius: 50%;
+  border: 1px solid black;
+  background: red;
+  background-image: url("/docs/tap-card.svg");
+  transition: transform 0.2s;
+}
+.tap-card:active {
+  transform: translateY(-2px);
 }
