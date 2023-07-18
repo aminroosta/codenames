@@ -4,7 +4,7 @@ import Card from "~/components/Card";
 import "./Room.css";
 
 export default function Home(p: {
-  userRole: 'red-operator'
+  role: 'red-operator'
   | 'blue-operator'
   | 'red-spymaster'
   | 'blue-spymaster';
@@ -38,7 +38,8 @@ export default function Home(p: {
             face={card.face}
             index={index}
             votes={votes}
-            votable={p.userRole == p.status && card.face == 'down'}
+            role={p.role}
+            status={p.status}
           />
         }}
       </For>

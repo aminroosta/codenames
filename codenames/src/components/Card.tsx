@@ -1,4 +1,5 @@
 import { createSignal, For, Show } from "solid-js";
+import { RoomStatus, UserRole } from "~/common/types";
 import './Card.css';
 
 export default function Card(p: {
@@ -7,7 +8,8 @@ export default function Card(p: {
   face: 'up' | 'down';
   index: number;
   votes: string[];
-  votable?: boolean;
+  status: RoomStatus;
+  role: UserRole;
 }) {
 
   const hueDeg = () => p.face == 'down' ? 0 : p.color == 'blue' ? 120 : p.color == 'red' ? 300 : 0;
@@ -17,9 +19,14 @@ export default function Card(p: {
       : p.color == 'neutral' ? 100 / 5.0 : 0;
     return `calc(${step.toFixed(2)}% * ${p.index} - 2px)`;
   }
+  const isOperator = () => ['red-operator', 'blue-operator'].includes(p.status);
+  const canVote = () => isOperator() && p.status == p.role;
 
   return (
-    <div class="card">
+    <div
+      class="card"
+      style={`cursor: ${canVote() ? 'pointer' : 'default'};`}
+    >
       <img
         class="card-image"
         src={'/cards/' + p.image}
@@ -33,9 +40,11 @@ export default function Card(p: {
             background-image: url(/docs/${p.color}.png);
           `} />
       </Show>
-      <Show when={p.votable}>
+      <Show when={isOperator() && p.votes.length > 0}>
         <div class="vote-count">{p.votes.length}</div>
         <div class="votes">{p.votes.join(', ')}</div>
+      </Show>
+      <Show when={isOperator() && p.status == p.role && p.face == 'down'}>
         <button class="tap-card" />
       </Show>
     </div>
