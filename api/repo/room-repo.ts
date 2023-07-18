@@ -1,4 +1,3 @@
-
 import { v4 } from "uuid";
 import { OrmType } from "../db/orm";
 import { generateMnemonic } from "bip39";

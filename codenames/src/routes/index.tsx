@@ -1,8 +1,6 @@
 import { createEffect, onCleanup } from "solid-js";
 import { Title } from "solid-start";
 import Counter from "~/components/Counter";
-import { createWebSocketServer } from "solid-start/websocket";
-import server$ from "solid-start/server";
 
 export default function Home() {
   createEffect(async () => {
