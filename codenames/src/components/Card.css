@@ -23,10 +23,10 @@
   top: 2%;
   border: 1px solid black;
   border-radius: 50%;
-  width: 2.5vw;
-  height: 2.5vw;
+  width: 2vw;
+  height: 2vw;
+  line-height: 2vw;
   text-align: center;
-  line-height: 2.5vw;
 }
 .votes {
   position: absolute;
@@ -34,14 +34,16 @@
   height: 25px;
   overflow: hidden;
   font-size: 12px;
+  font-weight: bold;
+  left: 0;
 }
 
 .tap-card {
   position: absolute;
   top: 2%;
   right: 2%;
-  width: 3vw;
-  height: 3vw;
+  width: 2vw;
+  height: 2vw;
   border-radius: 50%;
   border: 1px solid black;
   background: red;

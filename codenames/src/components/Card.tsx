@@ -12,6 +12,12 @@ export default function Card(p: {
 
   const hueDeg = () => p.face == 'down' ? 0 : p.color == 'blue' ? 120 : p.color == 'red' ? 300 : 0;
   const hueSat = () => p.face == 'down' ? 100 : 250;
+  const yCalc = () => {
+    const step = p.color == 'blue' || p.color == 'red' ? 100 / 8.0
+      : p.color == 'neutral' ? 100 / 5.0 : 0;
+    return `calc(${step.toFixed(2)}% * ${p.index} - 2px)`;
+  }
+
   return (
     <div class="card">
       <img
@@ -23,7 +29,7 @@ export default function Card(p: {
         `} />
       <Show when={p.face === 'up'}>
         <div class="face-up" style={`
-            background-position-y: calc(12.5% * ${p.index} - 2px);
+            background-position-y: ${yCalc()};
             background-image: url(/docs/${p.color}.png);
           `} />
       </Show>
