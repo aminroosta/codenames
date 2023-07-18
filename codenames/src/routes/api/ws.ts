@@ -1,13 +1,19 @@
 import { WebSocketServer, WebSocket } from 'ws';
-import { APIEvent, json } from "solid-start";
+import { APIEvent, json, parseCookie } from "solid-start";
 
 const globalThis = global as any;
 
-const handler = (ws: WebSocket) => {
+const handler = (
+  ws: WebSocket,
+  { rawHeaders: headers }: Request & { rawHeaders: string[] }
+) => {
+  const cookeIndex = headers.findIndex((h) => h === 'Cookie');
+  const { sid } = parseCookie(headers[cookeIndex + 1] || '');
+
   ws.on('error', console.error);
 
   ws.on('message', function message(data) {
-    ws.send(JSON.stringify([{ type: 'pong', data: ['something'] }]));
+    ws.send(JSON.stringify([{ type: 'pong', data: { sid } }]));
   });
 }
 
