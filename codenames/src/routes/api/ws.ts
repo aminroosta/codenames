@@ -11,22 +11,27 @@ const handler = (ws: WebSocket) => {
   });
 }
 
-// handle HMR
+// In dev mode this file is reloaded, we replace the handler to support HMR.
 if (globalThis.handler) {
   globalThis.wss.off('connection', globalThis.handler);
   globalThis.wss.on('connection', handler);
   globalThis.handler = handler;
 }
 
-if (!globalThis.wss) {
-  const server = globalThis.server;
-  const wss = new WebSocketServer(server || { port: 8181 });
-  wss.on('connection', handler);
-  globalThis.handler = handler;
-  globalThis.wss = wss;
+// Setup the websocket server.
+function setupWebsocketServer() {
+  if (!globalThis.wss) {
+    const server = globalThis.server;
+    const wss = new WebSocketServer(server ? { server } : { port: 8181 });
+    wss.on('connection', handler);
+    globalThis.handler = handler;
+    globalThis.wss = wss;
+  }
 }
 
 export function GET() {
-  return json({ port: 8181 });
+  setupWebsocketServer();
+  const port = globalThis.server ? 3000 : 8181;
+  return json({ port });
 }
 

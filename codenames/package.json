@@ -3,7 +3,7 @@
   "scripts": {
     "dev": "solid-start dev",
     "build": "solid-start build",
-    "start": "solid-start start"
+    "start": "node -r ./preload.cjs ./dist/server.js"
   },
   "type": "module",
   "devDependencies": {
