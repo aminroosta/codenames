@@ -1,0 +1,84 @@
+/* generic styles */
+
+*:focus {
+  outline: none;
+}
+
+.flex {
+  display: flex;
+}
+
+.margin-r-5 {
+  margin-right: 5px;
+}
+
+.box-shadow-bottom {
+  box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.border-r-5 {
+  border-radius: 5px;
+}
+
+.naked-button {
+  border: none;
+  background-color: transparent;
+}
+
+/* clue styles */
+
+.clue {
+  width: 100%;
+}
+
+.clue .word {
+  flex-grow: 1;
+  height: 24px;
+  padding: 0 5px;
+  border: none;
+  font-size: 16px;
+}
+
+.clue .count {
+  border: none;
+  background-color: white;
+  width: 25px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: normal;
+  cursor: pointer;
+  position: relative;
+}
+
+.clue .number-container {
+  position: absolute;
+  background-color: white;
+  bottom: 30px;
+  left: -135px;
+  padding: 5px;
+}
+
+.clue .number {
+  width: 25px;
+  height: 25px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid lightgray;
+}
+
+.clue .number:not(:last-child) {
+  margin-right: 5px;
+}
+
+.clue .submit {
+  border: none;
+  background-color: yellowgreen;
+  cursor: pointer;
+}
+
+.clue .submit:disabled {
+  background-color: lightgray;
+  cursor: not-allowed;
+}

@@ -3,11 +3,21 @@ import Clue from "~/components/Clue";
 
 export default function Home() {
   <Style>{`
-
-  `}</Style>
+    .clue-story {
+      background-color: brown;
+      height: 100vh;
+    }
+    .container {
+      width: 400px;
+      margin: auto;
+      padding-top: 40%;
+    }
+  `}</Style>;
   return (
     <div class="clue-story">
-      <Clue onDone={clue => console.log(clue)} />
+      <div class="container">
+        <Clue onDone={(clue) => console.log(clue)} />
+      </div>
     </div>
   );
 }
