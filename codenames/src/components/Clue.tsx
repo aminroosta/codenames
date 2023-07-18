@@ -1,17 +1,17 @@
 import { createSignal, For, Show, createEffect } from "solid-js";
+import { clickOutside } from "~/common/directives";
 import "./Clue.css";
 
 export default function Clue(p: {
   onDone: (_: { word: string; count: number }) => void;
 }) {
-  const { onDone } = p;
-
-  const [clue, setClue] = createSignal({
-    word: "",
-    count: undefined,
-  });
+  const outsideClick = clickOutside;
 
   const [showCount, setShowCount] = createSignal(false);
+  const [clue, setClue] = createSignal({
+    word: "",
+    count: null as any as number,
+  });
 
   return (
     <div class="clue flex">
@@ -31,28 +31,31 @@ export default function Clue(p: {
       >
         {clue().count ?? "-"}
 
-        {showCount() && (
-          <div class="flex number-container border-r-5">
-            {Array.from(Array(10).keys()).map((num) => (
+        <div
+          use:outsideClick={() => setShowCount(false)}
+          class="flex number-container border-r-5"
+          style={`opacity: ${showCount() ? 1 : 0}; pointer-events: ${showCount() ? 'default' : 'none'};`}>
+          <For each={Array.from(Array(10).keys())}>
+            {(num) => (
               <div
                 class="flex number border-r-5 box-shadow-bottom"
-                key={num}
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
                   setClue({ ...clue(), count: num });
                   setShowCount(false);
                 }}
               >
                 {num}
               </div>
-            ))}
-          </div>
-        )}
+            )}
+          </For>
+        </div>
       </button>
       <button
-        class="submit border-r-5 box-shadow-bottom"
+        class={`submit border-r-5 box-shadow-bottom`}
         onClick={() => {
           const { word, count } = clue();
-          onDone({ word, count });
+          p.onDone({ word, count });
         }}
         disabled={clue().word.length === 0 || clue().count === 0}
       >
@@ -61,3 +64,9 @@ export default function Clue(p: {
     </div>
   );
 }
+// createEffect(() => {
+//   console.log({
+//     showCount: showCount(),
+//     clue: clue(),
+//   });
+// });
