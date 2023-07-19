@@ -1,5 +1,6 @@
 import { createSignal, For, Show, createEffect } from "solid-js";
 import { clickOutside } from "~/common/directives";
+import Button from "./Button";
 import "./Clue.css";
 
 export default function Clue(p: {
@@ -51,8 +52,9 @@ export default function Clue(p: {
           </For>
         </div>
       </button>
-      <button
-        class={`submit border-r-5 box-shadow-bottom`}
+
+      <Button
+        color="green"
         onClick={() => {
           const { word, count } = clue();
           p.onDone({ word, count });
@@ -60,13 +62,7 @@ export default function Clue(p: {
         disabled={clue().word.length === 0 || clue().count === null}
       >
         Give Clue
-      </button>
+      </Button>
     </div>
   );
 }
-// createEffect(() => {
-//   console.log({
-//     showCount: showCount(),
-//     clue: clue(),
-//   });
-// });

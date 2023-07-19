@@ -72,14 +72,3 @@
 .clue .number:not(:last-child) {
   margin-right: 5px;
 }
-
-.clue .submit {
-  padding: 5px 10px;
-  border: none;
-  background-color: yellowgreen;
-  cursor: pointer;
-}
-
-.clue .submit:disabled {
-  cursor: not-allowed;
-}

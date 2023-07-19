@@ -1,0 +1,35 @@
+.button {
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+
+  border-radius: 5px;
+
+  box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.2);
+  border-width: 2px 1px;
+  border-style: solid;
+  border-image: initial;
+  transition: transform 0.2s;
+}
+
+.button:disabled {
+  cursor: not-allowed;
+}
+.button:active {
+  transform: translateY(-2px);
+}
+
+.button.green {
+  background-color: rgb(106, 233, 17);
+  border-color: rgb(199, 247, 156) rgb(106, 233, 17) rgb(95, 163, 19)
+}
+
+.button.yellow {
+  background-color: rgb(255, 228, 0);
+  border-color: rgb(255, 246, 167) rgb(255, 228, 0) rgb(243, 187, 0)
+}
+
+.button.blue {
+  background-color: rgb(68, 200, 255);
+  border-color: rgb(145, 223, 255) rgb(68, 200, 255) rgb(63, 167, 211);
+}

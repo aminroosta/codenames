@@ -1,6 +1,5 @@
 import { createEffect } from "solid-js";
 import { createStore } from "solid-js/store";
-import { Style } from "solid-start";
 import { generateCards } from "~/common/gen-cards";
 import Room from "~/components/Room";
 
