@@ -1,7 +1,8 @@
 export type UserRole = 'red-operator'
   | 'blue-operator'
   | 'red-spymaster'
-  | 'blue-spymaster';
+  | 'blue-spymaster'
+  | 'none';
 
 export type RoomStatus = 'lobby'
   | 'red-operator'

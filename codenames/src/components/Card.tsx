@@ -14,10 +14,10 @@ export default function Card(p: {
   const isSpymaster = () => ['red-spymaster', 'blue-spymaster'].includes(p.role);
   const isOperator = () => ['red-operator', 'blue-operator'].includes(p.status);
   const canVote = () => isOperator() && p.status == p.role;
-  const revealed = () => p.face == 'up' || isSpymaster();
+  const tint = () => !(p.face == 'up' || isSpymaster()) || p.role == 'none';
 
-  const hueDeg = () => !revealed() ? 0 : p.color == 'blue' ? 120 : p.color == 'red' ? 220 : 0;
-  const hueSat = () => !revealed() ? 100 : 250;
+  const hueDeg = () => tint() ? 0 : p.color == 'blue' ? 120 : p.color == 'red' ? 220 : 0;
+  const hueSat = () => tint() ? 100 : 250;
 
   const yCalc = () => {
     const step = p.color == 'blue' || p.color == 'red' ? 100 / 8.0

@@ -19,7 +19,7 @@ create table room_users (
   room_id uuid not null references rooms(room_id),
   user_id uuid not null references users(user_id),
   team text not null, -- red, blue
-  role text not null -- spymaster, player
+  role text not null -- spymaster, operative
 );
 
 create index room_users_room_id_user_id_idx on room_users(room_id, user_id);

@@ -1,0 +1,42 @@
+.team {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  color: white;
+}
+.team .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.team.red .header {
+  flex-direction: row-reverse;
+}
+.team .count {
+  font-size: 36px;
+  font-weight: bold;
+  padding: 0 20px;
+}
+.team .header .card {
+  max-width: 150px;
+}
+
+.team .section div:last-child {
+  font-size: 12px;
+  line-height: 1.5rem;
+}
+.team.blue {
+  background-color: rgb(50, 132, 163);
+}
+.team.red {
+  background-color: rgb(143, 43, 28);
+}
+.team.blue .section div:first-child {
+  color: #7bcae9;
+}
+.team.red .section div:first-child {
+  color: #e65831;
+}
