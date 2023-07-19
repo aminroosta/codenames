@@ -7,6 +7,10 @@ export default function TeamStory() {
     spymasters: ['Amin', 'Negar'],
     operatives: [],
     cardCount: 9,
+    role: 'none',
+    onJoin: (role: 'operator' | 'spymaster') => {
+      setState('role', role);
+    },
   });
 
   createEffect(() => {
