@@ -4,12 +4,12 @@ import Team from "~/components/Team";
 
 export default function TeamStory() {
   const [state, setState] = createStore({
-    spymasters: ['Amin', 'Negar'],
+    spymasters: ["Amin", "Negar"],
     operatives: [],
     cardCount: 9,
-    role: 'none',
-    onJoin: (role: 'operator' | 'spymaster') => {
-      setState('role', role);
+    role: "none" as "none" | "operator" | "spymaster",
+    onJoin: (role: "operator" | "spymaster") => {
+      setState("role", role);
     },
   });
 

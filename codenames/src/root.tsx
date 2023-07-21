@@ -11,6 +11,7 @@ import {
   Routes,
   Scripts,
   Title,
+  useRoutes,
 } from "solid-start";
 import "./root.css";
 

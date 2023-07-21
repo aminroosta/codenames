@@ -1,13 +1,14 @@
 # Codenames
 
 Components
-- Button
-- Home
+
+- [x] Button
+- [x] Home
+- [x] Room
+- [x] TeamInfo
 - RoomSetup
-- Room
-- TeamInfo
 - GameLog
-- Board
-- Card
-- Clue
 - BoardTitle
+- [x] Board
+- [x] Card
+- [x] Clue
