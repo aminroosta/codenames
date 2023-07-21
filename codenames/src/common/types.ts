@@ -1,3 +1,6 @@
+import { APIEvent } from "solid-start";
+import { OrmType } from "~/api/db/orm";
+
 export type UserRole = 'red-operator'
   | 'blue-operator'
   | 'red-spymaster'
@@ -13,3 +16,9 @@ export type RoomStatus = 'lobby'
   | 'red-won';
 
 
+export type AppApiEvent = APIEvent & {
+  locals: {
+    orm: OrmType;
+    sid: string;
+  }
+};

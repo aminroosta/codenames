@@ -1,9 +1,9 @@
 import Database, { Database as DB } from "better-sqlite3";
-import fs from "node:fs";
 import { Orm, OrmType } from "./orm";
+import schema from "./schema";
 
 export function initialize(db: DB) {
-  fs.readFileSync(__dirname + "/schema.sql", { encoding: "utf-8" })
+  schema
     .split(";")
     .map((statement) => statement.trim())
     .filter((statement) => statement)

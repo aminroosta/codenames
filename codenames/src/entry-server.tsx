@@ -1,3 +1,4 @@
+import { getOrm } from "~/api/db/orm-factory";
 import { randomUUID as uuid } from "crypto";
 import { FetchEvent, parseCookie } from "solid-start";
 import {
@@ -22,7 +23,16 @@ const sessionMiddleware = ({ forward }: MiddlewareInput) => {
   };
 };
 
+const repoMiddleware = ({ forward }: MiddlewareInput) => {
+  return async (event: FetchEvent) => {
+    const orm = getOrm("/tmp/db.sqlite");
+    event.locals.orm = orm;
+    return await forward(event);
+  };
+};
+
 export default createHandler(
   sessionMiddleware,
+  repoMiddleware,
   renderAsync((event) => <StartServer event={event} />)
 );
