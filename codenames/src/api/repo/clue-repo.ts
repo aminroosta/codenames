@@ -1,16 +1,7 @@
 
 import { v4 } from "uuid";
+import { Clue } from "~/common/types";
 import { OrmType } from "../db/orm";
-
-export type Clue = {
-  clue_id: string;
-  room_id: string;
-  user_id: string;
-  word: string;
-  count: number;
-  status: 'active' | 'finished';
-  created_at: Date;
-};
 
 export const clueRepo = (orm: OrmType) => {
   const getAll = ({ room_id }: { room_id: string }) => {

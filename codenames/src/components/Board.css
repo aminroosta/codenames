@@ -1,5 +1,5 @@
 
-.room {
+.board {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-column-gap: 4px;
@@ -7,6 +7,6 @@
   max-width: 900px;
   margin: 0 auto;
 }
-.room > div {
+.board > div {
   aspect-ratio: 1;
 }

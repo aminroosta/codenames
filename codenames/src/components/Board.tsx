@@ -1,25 +1,16 @@
-
-import { createEffect, For, onCleanup } from "solid-js";
+import { For } from "solid-js";
+import { RoomStatus, UserRole } from "~/common/types";
 import Card from "~/components/Card";
-import "./Room.css";
+import "./Board.css";
 
-export default function Home(p: {
-  role: 'red-operator'
-  | 'blue-operator'
-  | 'red-spymaster'
-  | 'blue-spymaster';
+export default function Board(p: {
+  role: UserRole;
   cards: {
     image: string,
     color: 'red' | 'blue' | 'black' | 'neutral',
     face: 'up' | 'down',
   }[];
-  status: 'lobby'
-  | 'red-operator'
-  | 'blue-operator'
-  | 'red-spymaster'
-  | 'blue-spymaster'
-  | 'blue-won'
-  | 'red-won';
+  status: RoomStatus;
   clue?: {
     word: string;
     count: number;
@@ -27,7 +18,7 @@ export default function Home(p: {
   }
 }) {
   return (
-    <div class="room">
+    <div class="board">
       <For each={p.cards}>
         {(card, i) => {
           const index = p.cards.filter(c => c.color === card.color).indexOf(card);

@@ -1,7 +1,7 @@
 import { createEffect } from "solid-js";
 import { createStore } from "solid-js/store";
 import { generateCards } from "~/common/gen-cards";
-import Room from "~/components/Room";
+import Board from "~/components/Board";
 
 export default function RoomStory() {
   const cards = generateCards().map(c => ({ ...c, face: Math.random() > 0.5 ? 'up' : 'down' }));
@@ -18,7 +18,7 @@ export default function RoomStory() {
 
   return (
     <div class="room-story">
-      <Room {...state} />
+      <Board {...state} />
     </div>
   );
 }

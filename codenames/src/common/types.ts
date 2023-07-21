@@ -22,3 +22,25 @@ export type AppApiEvent = APIEvent & {
     sid: string;
   }
 };
+
+export type Room = {
+  room_id: string;
+  user_id: string;
+  name: string;
+  cards: {
+    image: string,
+    color: 'red' | 'blue' | 'black' | 'neutral'
+  }[];
+  status: RoomStatus;
+};
+
+export type Clue = {
+  room_id: string;
+  user_id: string;
+  word: string;
+  count: number;
+  votes: string[][]; // [[nickname], ...]
+  status: 'active' | 'finished';
+  created_at: Date;
+};
+

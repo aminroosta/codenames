@@ -1,27 +1,7 @@
 import { v4 } from "uuid";
 import { OrmType } from "../db/orm";
 import { generateMnemonic } from "bip39";
-
-export type Room = {
-  room_id: string;
-  user_id: string;
-  name: string;
-  cards: {
-    image: string,
-    color: 'red' | 'blue' | 'black' | 'neutral'
-  }[];
-  status: 'lobby' | 'playing' | 'finished';
-};
-
-export type Clue = {
-  room_id: string;
-  user_id: string;
-  word: string;
-  count: number;
-  votes: string[][]; // [[nickname], ...]
-  status: 'active' | 'finished';
-  created_at: Date;
-};
+import { Room } from "~/common/types";
 
 export const roomRepo = (orm: OrmType) => {
   const getByName = ({ name }: { name: string }) => {
