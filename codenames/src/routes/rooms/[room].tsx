@@ -41,8 +41,9 @@ export default function Room() {
   );
 
   const [votes] = createResource(
-    () => clues() && epochs().votes,
+    () => clues.latest && epochs().votes,
     () => {
+      if (!clues.latest.length) return [];
       const clue_id = clues.latest[clues.latest.length - 1].clue_id;
       return fetch(`/api/vote?clue_id=${clue_id}`).then(r => r.json());
     }
