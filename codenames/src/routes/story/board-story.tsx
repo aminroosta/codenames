@@ -4,7 +4,7 @@ import { generateCards } from "~/common/gen-cards";
 import Board from "~/components/Board";
 
 export default function RoomStory() {
-  const cards = generateCards().map(c => ({ ...c, face: Math.random() > 0.5 ? 'up' : 'down' }));
+  const cards = generateCards().map(c => ({ ...c, face: Math.random() > 0.95 ? 'up' : 'down' }));
   const clue = { word: 'test', count: 1, votes: [['Amin', 'Negar'], ['Amin']] };
 
   const [state, setState] = createStore({ cards, clue, status: 'red-operator', role: 'red-operator' });

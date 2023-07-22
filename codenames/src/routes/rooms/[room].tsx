@@ -1,4 +1,4 @@
-import type { Role, Room, User, UserRole } from "~/common/types";
+import type { Role, Room, User, UserRole, Clue as ClueType } from "~/common/types";
 import { createEffect, createResource, createSignal, Show } from "solid-js";
 import { createStore } from "solid-js/store";
 import { useLocation } from "solid-start";
@@ -20,16 +20,21 @@ export default function Room() {
     (_) => {
       const name = location.pathname.split('/').pop();
       return fetch(`/api/room?name=${name}`).then(r => r.json());
-    },
-    { deferStream: true }
+    }
   );
   const [roles] = createResource(
     () => epochs().roles,
     () => {
       const name = location.pathname.split('/').pop();
       return fetch(`/api/room/role?name=${name}`).then(r => r.json());
+    }
+  );
+  const [clues] = createResource(
+    () => epochs().clues,
+    () => {
+      const name = location.pathname.split('/').pop();
+      return fetch(`/api/room/clue?name=${name}`).then(r => r.json());
     },
-    { deferStream: true }
   );
   const [user, userHandle] = createResource(
     () => epochs().user,
@@ -57,21 +62,23 @@ export default function Room() {
     }
   >
     <Show
-      when={room.latest && roles.latest && user.latest}
+      when={room.latest && roles.latest && user.latest && clues.latest}
       fallback={<div>loading ...</div>}
     >
-      <RoomImpl room={room.latest} roles={roles.latest} user={user.latest} />
+      <RoomImpl room={room.latest} roles={roles.latest} user={user.latest} clues={clues.latest} />
     </Show>
   </Show>
 }
 
-function RoomImpl(p: { room: Room, roles: UserRole[], user: User }) {
+function RoomImpl(p: { room: Room, roles: UserRole[], user: User, clues: ClueType[] }) {
   const [state, setState] = createStore({
-    clue: { word: '', count: 0, votes: [] },
-    role: 'red-spymaster' as Role,
     cards: p.room.cards.map(c => ({ ...c, face: 'down' })),
     status: p.room.status,
   });
+
+  const role = () => p.roles.find(r => r.user_id === p.user.user_id)?.role || 'none';
+  const clue = () => p.clues[p.clues.length - 1] || { word: '', count: 0, votes: [] };
+  createEffect(() => { console.log({ role: role() }) });
 
   const onClue = (clue: { word: string, count: number }) => {
     console.log(clue);
@@ -81,8 +88,12 @@ function RoomImpl(p: { room: Room, roles: UserRole[], user: User }) {
     <TeamImpl color="red" room={p.room} roles={p.roles} user={p.user} />
     <div class="board-wrapper">
       <div class='status'> {state.status} </div>
-      <Board {...state} />
-      <Show when={state.role.includes('spymaster')}>
+      <Board
+        {...state}
+        role={role()}
+        clue={clue()}
+      />
+      <Show when={role().includes('spymaster')}>
         <Clue onDone={onClue} />
       </Show>
     </div>
@@ -128,7 +139,7 @@ function TeamImpl(p: {
 }
 
 function liveEpochs() {
-  const [epochs, setEpochs] = createSignal({ room: 0, roles: 0, user: 0 });
+  const [epochs, setEpochs] = createSignal({ room: 0, roles: 0, user: 0, clues: 0 });
 
   fetch('/api/ws')
     .then(r => r.json())
