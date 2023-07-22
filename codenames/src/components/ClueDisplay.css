@@ -1,0 +1,24 @@
+.clue-display {
+  justify-content: center;
+  transition: transform 1s;
+}
+
+.clue-display > div {
+  background-color: white;
+  padding: 5px 10px;
+  font-weight: bold;
+  border-radius: 10px;
+  border-width: 5px;
+  border-style: solid;
+}
+
+.clue-display > div:last-child {
+  margin-left: -5px;
+}
+
+.clue-display.red > div {
+  border-color: #e65831;
+}
+.clue-display.blue > div {
+  border-color: #7bcae9;
+}

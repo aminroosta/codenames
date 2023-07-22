@@ -9,6 +9,7 @@ import "./room.css";
 import RoomSetup from "~/components/RoomSetup";
 import Menu from "~/components/Menu";
 import BoardTitle from "~/components/BoardStatus";
+import ClueDisplay from "~/components/ClueDisplay";
 
 export default function Room() {
   const { epochs, wsSend } = liveEpochs();
@@ -120,7 +121,7 @@ function RoomImpl(p: {
   const clue = () => p.clues[p.clues.length - 1] || { word: '', count: 0, votes: [] };
 
   createEffect(() => {
-    console.log({ status: status(), role: role(), room: p.room});
+    console.log({ status: status(), role: role(), room: p.room });
   });
 
   const onClue = (clue: { word: string, count: number }) => {
@@ -180,6 +181,13 @@ function RoomImpl(p: {
         />
         <Show when={role().includes('spymaster') && role() == status()}>
           <Clue onDone={onClue} />
+        </Show>
+        <Show when={clue()?.status === "active"}>
+          <ClueDisplay
+            word={clue().word}
+            count={clue().count}
+            belongsToTeam={status().includes("blue") ? "blue" : "red"}
+          />
         </Show>
       </div>
       <TeamImpl color="blue" room={p.room} roles={p.roles} user={p.user} />
