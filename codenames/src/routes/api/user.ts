@@ -11,8 +11,10 @@ export function POST() {
   // ...
 }
 
-export function PATCH() {
-  // ...
+export async function PUT({ locals: { orm, sid }, request }: AppApiEvent) {
+  const { nickname } = await new Response(request.body).json()
+  const user = userRepo(orm).upsert({ user_id: sid, nickname });
+  return json(user);
 }
 
 export function DELETE() {

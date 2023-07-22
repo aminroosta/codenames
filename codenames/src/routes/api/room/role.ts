@@ -21,7 +21,11 @@ export async function POST(
 ) {
   const { room_id, role } = await new Response(request.body).json()
   const userRole = roleRepo(orm).setRole({ user_id: sid, room_id, role });
-  wsSend({ room_id, type: 'epoch', data: { roles: +new Date() } });
+  wsSend({
+    room_id,
+    type: 'epoch',
+    data: { roles: +new Date() }
+  });
 
   return json(userRole);
 }

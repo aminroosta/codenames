@@ -6,6 +6,7 @@ import Board from "~/components/Board";
 import Team from "~/components/Team";
 import Clue from "~/components/Clue";
 import "./room.css";
+import RoomSetup from "~/components/RoomSetup";
 
 export default function Room() {
   const epochs = liveEpochs();
@@ -30,16 +31,37 @@ export default function Room() {
     },
     { deferStream: true }
   );
-  const [user] = createResource(
+  const [user, userHandle] = createResource(
     () => epochs().user,
     () => fetch(`/api/user`).then(r => r.json())
   );
 
+
+  const onClick = async ({ nickname }: { nickname: string }) => {
+    const user = await fetch(
+      '/api/user', {
+      method: 'PUT',
+      body: JSON.stringify({ nickname })
+    }).then(r => r.json());
+    userHandle.mutate(user);
+  };
+
   return <Show
-    when={room() && roles() && user()}
-    fallback={<div>loading ...</div>}
+    when={user.latest && user.latest.nickname}
+    fallback={
+      <RoomSetup
+        nickname=''
+        onClick={onClick}
+        buttonLabel="Join Room"
+      />
+    }
   >
-    <RoomImpl room={room()} roles={roles()} user={user()} />
+    <Show
+      when={room.latest && roles.latest && user.latest}
+      fallback={<div>loading ...</div>}
+    >
+      <RoomImpl room={room.latest} roles={roles.latest} user={user.latest} />
+    </Show>
   </Show>
 }
 
@@ -68,14 +90,12 @@ function RoomImpl(p: { room: Room, roles: UserRole[], user: User }) {
   </div>;
 }
 
-function TeamImpl(p: { color: "red" | "blue", room: Room, roles: UserRole[], user: User }) {
-  const [state, setState] = createStore({
-    role: "none" as Role,
-    onJoin: (role: Role) => {
-      setState("role", role);
-    },
-  });
-
+function TeamImpl(p: {
+  color: "red" | "blue",
+  room: Room,
+  roles: UserRole[],
+  user: User
+}) {
   const spymasters = () => p.roles
     .filter(r => r.role == `${p.color}-spymaster`)
     .map(r => r.nickname)
@@ -86,6 +106,10 @@ function TeamImpl(p: { color: "red" | "blue", room: Room, roles: UserRole[], use
     .sort();
 
   const cardCount = () => p.room.cards.filter(c => c.color === p.color).length;
+  const role = () => {
+    const user_id = p.user.user_id;
+    return p.roles.find(r => r.user_id == user_id)?.role || 'none';
+  };
   const onJoin = async (role: Role) => {
     await fetch("/api/room/role", {
       method: "POST",
@@ -94,7 +118,7 @@ function TeamImpl(p: { color: "red" | "blue", room: Room, roles: UserRole[], use
   };
 
   return <Team
-    {...state}
+    role={role()}
     color={p.color}
     cardCount={cardCount()}
     onJoin={onJoin}

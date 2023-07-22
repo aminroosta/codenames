@@ -1,17 +1,11 @@
-import { Accessor, Show } from "solid-js";
-import { createRouteData, useNavigate, useRouteData } from "solid-start";
+import { createResource, Show } from "solid-js";
+import { useNavigate } from "solid-start";
 import RoomSetup from "~/components/RoomSetup";
 
-export function routeData() {
-  return createRouteData(async () => {
-    const response = await fetch("/api/user");
-    const user = await response.json();
-    return user;
-  });
-}
-
 export default function RoomCreate() {
-  const user = useRouteData() as any;
+  const [user] = createResource(
+    () => fetch("/api/user").then(r => r.json())
+  );
   const navigate = useNavigate();
   const onClick = async ({ nickname }: { nickname: string }) => {
     const room = await fetch(
@@ -27,6 +21,10 @@ export default function RoomCreate() {
     when={user()}
     fallback={<div>loading ...</div>}
   >
-    <RoomSetup nickname={user().nickname} onClick={onClick} />
+    <RoomSetup
+      nickname={user().nickname}
+      onClick={onClick}
+      buttonLabel="Create Room"
+    />
   </Show>
 }

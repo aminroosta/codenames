@@ -1,18 +1,25 @@
-import { createSignal } from "solid-js";
+import { createSignal, onMount } from "solid-js";
 import Button from "./Button";
 import "./RoomSetup.css";
 
 export default function RoomSetup(p: {
   nickname: string;
   onClick: ({ nickname }: { nickname: string }) => void;
+  buttonLabel: string;
 }) {
   const [nickname, setNickname] = createSignal(p.nickname || '');
+
+  let input: HTMLInputElement;
+  onMount(() => {
+    input.focus();
+  });
 
   return <div class="room-setup">
     <h3> Welcome to Codename Pictures </h3>
 
-    <p> To enter a room choose a nickname </p>
+    <p> To enter the room, choose a nickname. </p>
     <input
+      ref={input}
       value={nickname()}
       placeholder="Nickname"
       type="text"
@@ -31,6 +38,6 @@ export default function RoomSetup(p: {
       if (nickname()) {
         p.onClick({ nickname: nickname() });
       }
-    }}> Create a room </Button>
+    }}> {p.buttonLabel} </Button>
   </div>;
 }
