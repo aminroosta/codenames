@@ -1,5 +1,5 @@
-import { createEffect, For } from "solid-js";
-import { RoomStatus, Role } from "~/common/types";
+import { createEffect, For, Index } from "solid-js";
+import { RoomStatus, Role, Clue, Vote } from "~/common/types";
 import Card from "~/components/Card";
 import "./Board.css";
 
@@ -11,29 +11,31 @@ export default function Board(p: {
     face: 'up' | 'down',
   }[];
   status: RoomStatus;
-  clue?: {
-    word: string;
-    count: number;
-    votes: string[][];
-  }
+  clue?: Clue;
+  votes: Vote[];
+  onToggleVote: (card_idx: number) => void;
+  onShowCard: (card_idx: number) => void;
 }) {
+
   return (
     <div class="board">
-      <For each={p.cards}>
+      <Index each={p.cards}>
         {(card, i) => {
-          const index = p.cards.filter(c => c.color === card.color).indexOf(card);
-          const votes = p.clue?.votes[i()] || [];
+          const index = () => p.cards.filter(c => c.color === card().color).indexOf(card());
+          const votes = () => p.votes.find(v => v.card_idx === i)?.nicknames ?? [];
           return <Card
-            image={card.image}
-            color={card.color}
-            face={card.face}
-            index={index}
-            votes={votes}
+            image={card().image}
+            color={card().color}
+            face={card().face}
+            index={index()}
+            votes={votes()}
             role={p.role}
             status={p.status}
+            onToggleVote={() => p.onToggleVote(i)}
+            onShowCard={() => p.onShowCard(i)}
           />
         }}
-      </For>
+      </Index>
     </div>
   );
 }

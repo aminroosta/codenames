@@ -1,4 +1,4 @@
-import { createSignal, For, Show } from "solid-js";
+import { createEffect, createSignal, For, Show } from "solid-js";
 import { RoomStatus, Role } from "~/common/types";
 import './Card.css';
 
@@ -10,6 +10,8 @@ export default function Card(p: {
   votes: string[];
   status: RoomStatus;
   role: Role;
+  onToggleVote: () => void;
+  onShowCard: () => void;
 }) {
   const isSpymaster = () => ['red-spymaster', 'blue-spymaster'].includes(p.role);
   const isOperator = () => ['red-operator', 'blue-operator'].includes(p.status);
@@ -24,6 +26,14 @@ export default function Card(p: {
       : p.color == 'neutral' ? 100 / 5.0 : 0;
     return `calc(${step.toFixed(2)}% * ${p.index} - 2px)`;
   }
+  // createEffect(() => {
+  //   console.log({ status: p.status, role: p.role, votes: p.votes });
+  // });
+  const onToggleVote = () => {
+    if (canVote()) {
+      p.onToggleVote();
+    }
+  };
 
   return (
     <div
@@ -34,6 +44,7 @@ export default function Card(p: {
         class="card-image"
         src={'/cards/' + p.image}
         alt={p.image}
+        onClick={onToggleVote}
         style={`
           filter: hue-rotate(${hueDeg()}deg) saturate(${hueSat()}%);
         `} />
@@ -48,7 +59,7 @@ export default function Card(p: {
         <div class="votes">{p.votes.join(', ')}</div>
       </Show>
       <Show when={isOperator() && p.status == p.role && p.face == 'down'}>
-        <button class="tap-card" />
+        <button class="tap-card" onClick={p.onShowCard} />
       </Show>
     </div>
   );

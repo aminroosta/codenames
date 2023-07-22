@@ -1,4 +1,4 @@
-import type { Role, Room, User, UserRole, Clue as ClueType, RoomStatus } from "~/common/types";
+import type { Role, Room, User, UserRole, Clue as ClueType, RoomStatus, Vote } from "~/common/types";
 import { createEffect, createResource, createSignal, Show } from "solid-js";
 import { createStore } from "solid-js/store";
 import { useLocation } from "solid-start";
@@ -40,6 +40,14 @@ export default function Room() {
     () => fetch(`/api/user`).then(r => r.json())
   );
 
+  const [votes] = createResource(
+    () => clues() && epochs().votes,
+    () => {
+      const clue_id = clues.latest[clues.latest.length - 1].clue_id;
+      return fetch(`/api/vote?clue_id=${clue_id}`).then(r => r.json());
+    }
+  );
+
 
   const onJoinRoom = async ({ nickname }: { nickname: string }) => {
     const user = await fetch(
@@ -70,6 +78,7 @@ export default function Room() {
         user={user.latest}
         clues={clues.latest}
         wsSend={wsSend}
+        votes={votes.latest || []}
       />
     </Show>
   </Show>
@@ -80,6 +89,7 @@ function RoomImpl(p: {
   roles: UserRole[],
   user: User,
   clues: ClueType[],
+  votes: Vote[],
   wsSend: (type: string, data: any) => void,
 }) {
   p.wsSend('join', { room_id: p.room.room_id });
@@ -113,7 +123,10 @@ function RoomImpl(p: {
   // });
 
   const onClue = (clue: { word: string, count: number }) => {
-    console.log(clue);
+    fetch("/api/room/clue", {
+      method: "POST",
+      body: JSON.stringify({ ...clue, room_id: p.room.room_id }),
+    });
   };
   const onResetGame = () => fetch("/api/room", {
     method: "PATCH",
@@ -128,6 +141,16 @@ function RoomImpl(p: {
     method: 'PUT',
     body: JSON.stringify({ nickname: '', room_id: p.room.room_id })
   });
+
+  const onToggleVote = (card_idx: number) => {
+    fetch("/api/vote", {
+      method: "POST",
+      body: JSON.stringify({ clue_id: clue().clue_id, card_idx }),
+    });
+  };
+  const onShowCard = (card_idx: number) => {
+    console.log({ card_idx, type: 'show-card' });
+  };
 
   return <div>
     <Menu
@@ -147,8 +170,11 @@ function RoomImpl(p: {
           cards={cards()}
           role={role()}
           clue={clue()}
+          votes={p.votes}
+          onToggleVote={onToggleVote}
+          onShowCard={onShowCard}
         />
-        <Show when={role().includes('spymaster')}>
+        <Show when={role().includes('spymaster') && role() == status()}>
           <Clue onDone={onClue} />
         </Show>
       </div>
@@ -195,7 +221,13 @@ function TeamImpl(p: {
 }
 
 function liveEpochs() {
-  const [epochs, setEpochs] = createSignal({ room: 0, roles: 0, user: 0, clues: 0 });
+  const [epochs, setEpochs] = createSignal({
+    room: 0,
+    roles: 0,
+    user: 0,
+    clues: 0,
+    votes: 0,
+  });
 
   let promise: Promise<WebSocket> = fetch('/api/ws')
     .then(r => r.json())

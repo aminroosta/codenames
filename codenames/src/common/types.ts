@@ -40,11 +40,11 @@ export type Room = {
 };
 
 export type Clue = {
+  clue_id: string;
   room_id: string;
   user_id: string;
   word: string;
   count: number;
-  votes: string[][]; // [[nickname], ...]
   status: 'active' | 'finished';
   created_at: Date;
 };
@@ -54,4 +54,9 @@ export type UserRole = {
   user_id: string;
   role: Role;
   nickname: string;
+};
+
+export type Vote = {
+  card_idx: number;
+  nicknames: string[];
 };

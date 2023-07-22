@@ -22,6 +22,14 @@ export const clueRepo = (orm: OrmType) => {
     return clue;
   };
 
+  const getById = ({ clue_id }: { clue_id: string }) => {
+    const [clue = null] = orm.query<Clue>({
+      from: 'clues',
+      where: { clue_id }
+    });
+    return clue;
+  };
+
   const create = ({ room_id, user_id, word, count }: {
     room_id: string,
     user_id: string,
@@ -39,7 +47,7 @@ export const clueRepo = (orm: OrmType) => {
         status: 'active',
       }
     });
-    return clue as Clue;
+    return clue as any as Clue;
   };
 
   const finishClue = ({ room_id }: { room_id: string }) => {
@@ -107,6 +115,7 @@ export const clueRepo = (orm: OrmType) => {
   return {
     create,
     getAll,
+    getById,
     getActiveClue,
     finishClue,
     showCard,
