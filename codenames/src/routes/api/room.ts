@@ -1,4 +1,5 @@
 import { json } from "solid-start";
+import { cardRepo } from "~/api/repo/card-repo";
 import { roomRepo } from "~/api/repo/room-repo";
 import { userRepo } from "~/api/repo/user-repo";
 import { AppApiEvent } from "~/common/types";
@@ -13,6 +14,7 @@ export function GET({ locals: { orm, sid }, request }: AppApiEvent) {
   const room = name ? repo.getByName({ name })
     : id ? repo.getById({ room_id: id })
       : null;
+
   return json(room);
 }
 

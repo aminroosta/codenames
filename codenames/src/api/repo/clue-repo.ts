@@ -50,34 +50,13 @@ export const clueRepo = (orm: OrmType) => {
     return clue as any as Clue;
   };
 
-  const finishClue = ({ room_id }: { room_id: string }) => {
+  const finishClue = ({ clue_id }: { clue_id: string }) => {
     const [clue = null] = orm.update({
       table: 'clues',
-      where: { room_id, status: 'active' },
+      where: { clue_id },
       set: { status: 'finished' }
     });
     return clue as any as Clue;
-  };
-
-  const getShownCards = ({ clue_id }: { clue_id: string }) => {
-    const cards = orm.query<{ card_idx: number }>({
-      from: 'shown_cards s join clues c using(clue_id)',
-      where: { 'c.clue_id': clue_id },
-      select: 's.card_idx'
-    });
-
-    return cards.map(({ card_idx }) => card_idx);
-  };
-
-  const showCard = ({ clue_id, card_idx, user_id }: {
-    clue_id: string,
-    card_idx: number,
-    user_id: string
-  }) => {
-    orm.insert({
-      into: 'shown_cards',
-      data: { clue_id, card_idx, user_id }
-    });
   };
 
   const toggleVote = ({ clue_id, card_idx, user_id }: {
@@ -118,8 +97,6 @@ export const clueRepo = (orm: OrmType) => {
     getById,
     getActiveClue,
     finishClue,
-    showCard,
-    getShownCards,
     toggleVote,
     getVotes,
   };

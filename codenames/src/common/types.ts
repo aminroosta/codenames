@@ -34,7 +34,8 @@ export type Room = {
   name: string;
   cards: {
     image: string,
-    color: 'red' | 'blue' | 'black' | 'neutral'
+    color: 'red' | 'blue' | 'black' | 'neutral',
+    face: 'up' | 'down'
   }[];
   status: RoomStatus;
 };

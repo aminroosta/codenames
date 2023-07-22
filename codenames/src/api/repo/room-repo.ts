@@ -2,15 +2,29 @@ import { v4 } from "uuid";
 import { OrmType } from "../db/orm";
 import { generateMnemonic } from "bip39";
 import { Room } from "~/common/types";
+import { cardRepo } from "./card-repo";
 
 export const roomRepo = (orm: OrmType) => {
+  const format = (room: any) => {
+    if (!room) { return null; }
+
+    const cards = JSON.parse(room.cards);
+    const shownCards = cardRepo(orm).getRoomShownCards({
+      room_id: room.room_id
+    });
+    room.cards = cards.map((card: any, idx: number) => ({
+      ...card,
+      face: shownCards.includes(idx) ? 'up' : 'down'
+    }));
+    return room as Room;
+  };
   const getByName = ({ name }: { name: string }) => {
     const [room = null] = orm.query<any>({ from: "rooms", where: { name } })
-    return room && { ...room, cards: JSON.parse(room.cards) } as Room;
+    return format(room);
   };
   const getById = ({ room_id }: { room_id: string }) => {
     const [room = null] = orm.query<any>({ from: "rooms", where: { room_id } })
-    return room && { ...room, cards: JSON.parse(room.cards) } as Room;
+    return format(room);
   };
 
   const create = ({ user_id }: { user_id: string }) => {

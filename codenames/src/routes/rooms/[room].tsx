@@ -49,7 +49,6 @@ export default function Room() {
     }
   );
 
-
   const onJoinRoom = async ({ nickname }: { nickname: string }) => {
     const user = await fetch(
       '/api/user', {
@@ -80,6 +79,7 @@ export default function Room() {
         clues={clues.latest}
         wsSend={wsSend}
         votes={votes.latest || []}
+        cards={cards.latest || []}
       />
     </Show>
   </Show>
@@ -115,13 +115,13 @@ function RoomImpl(p: {
     return turns[turnIndex % turns.length];
   };
 
-  const cards = () => p.room.cards.map(c => ({ ...c, face: 'down' as const }));
+  const cards = () => p.room.cards;
   const role = () => p.roles.find(r => r.user_id === p.user.user_id)?.role || 'none';
   const clue = () => p.clues[p.clues.length - 1] || { word: '', count: 0, votes: [] };
 
-  // createEffect(() => {
-  //   console.log({ status: status(), role: role() });
-  // });
+  createEffect(() => {
+    console.log({ status: status(), role: role(), room: p.room});
+  });
 
   const onClue = (clue: { word: string, count: number }) => {
     fetch("/api/room/clue", {
@@ -150,7 +150,10 @@ function RoomImpl(p: {
     });
   };
   const onShowCard = (card_idx: number) => {
-    console.log({ card_idx, type: 'show-card' });
+    fetch("/api/card", {
+      method: "POST",
+      body: JSON.stringify({ clue_id: clue().clue_id, card_idx }),
+    });
   };
 
   return <div>
@@ -228,6 +231,10 @@ function liveEpochs() {
     user: 0,
     clues: 0,
     votes: 0,
+  });
+
+  createEffect(() => {
+    console.log(epochs());
   });
 
   let promise: Promise<WebSocket> = fetch('/api/ws')
