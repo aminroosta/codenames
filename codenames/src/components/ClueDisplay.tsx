@@ -6,7 +6,7 @@ export default function ClueDisplay(p: {
   count: number;
   belongsToTeam: "red" | "blue";
 }) {
-  const [transform, setTransform] = createSignal("translate(0, -48vh)");
+  const [transform, setTransform] = createSignal("translate(0, -40vw)");
   const [fontSize, setFontSize] = createSignal("40px");
 
   setTimeout(() => {

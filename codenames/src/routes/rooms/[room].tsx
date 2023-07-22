@@ -10,6 +10,7 @@ import RoomSetup from "~/components/RoomSetup";
 import Menu from "~/components/Menu";
 import BoardTitle from "~/components/BoardStatus";
 import ClueDisplay from "~/components/ClueDisplay";
+import Button from "~/components/Button";
 
 export default function Room() {
   const { epochs, wsSend } = liveEpochs();
@@ -118,7 +119,7 @@ function RoomImpl(p: {
 
   const cards = () => p.room.cards;
   const role = () => p.roles.find(r => r.user_id === p.user.user_id)?.role || 'none';
-  const clue = () => p.clues[p.clues.length - 1] || { word: '', count: 0, votes: [] };
+  const clue = () => p.clues.filter(c => c.status == 'active')[0] || { word: '', count: 0 };
 
   createEffect(() => {
     console.log({ status: status(), role: role(), room: p.room });
@@ -156,6 +157,12 @@ function RoomImpl(p: {
       body: JSON.stringify({ clue_id: clue().clue_id, card_idx }),
     });
   };
+  const onEndGuessing = () => {
+    fetch("/api/room/clue", {
+      method: "PUT",
+      body: JSON.stringify({ clue_id: clue().clue_id, room_id: p.room.room_id }),
+    });
+  };
 
   return <div>
     <Menu
@@ -188,6 +195,17 @@ function RoomImpl(p: {
             count={clue().count}
             belongsToTeam={status().includes("blue") ? "blue" : "red"}
           />
+        </Show>
+        <Show when={
+          clue()?.status === "active" &&
+          role() == status() &&
+          role().endsWith('-operator')
+        }>
+          <Button
+            class="end-guessing"
+            color="yellow"
+            onClick={onEndGuessing}
+          >End Guessing</Button>
         </Show>
       </div>
       <TeamImpl color="blue" room={p.room} roles={p.roles} user={p.user} />

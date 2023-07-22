@@ -1,6 +1,7 @@
 import "./Button.css";
 
 export default function Button(p: {
+  class?: string;
   color: 'yellow' | 'green' | 'blue'
   onClick?: () => void;
   children?: any;
@@ -8,7 +9,7 @@ export default function Button(p: {
 }) {
   return (
     <button
-      class={`button ${p.color}`}
+      class={`button ${p.color} ${p.class || ''}`}
       onClick={p.onClick}
       disabled={p.disabled}
     >
