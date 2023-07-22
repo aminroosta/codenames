@@ -4,7 +4,7 @@
   grid-template-columns: repeat(5, 1fr);
   grid-column-gap: 4px;
   grid-row-gap: calc(24px + 4px);
-  max-width: 900px;
+  max-width: 80vh;
   margin: 0 auto;
 }
 .board > div {

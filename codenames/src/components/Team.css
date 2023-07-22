@@ -3,12 +3,9 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding: 20px 10px;
+  padding: 10px;
   border-radius: 10px;
   color: white;
-  min-width: 140px;
-  width: 20%;
-  max-width: 300px;
   height: fit-content;
 }
 .team .header {
