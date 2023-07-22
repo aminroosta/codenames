@@ -1,33 +1,13 @@
-import { v4 } from "uuid";
-import { Role, User } from "~/common/types";
+import { Role, UserRole } from "~/common/types";
 import { OrmType } from "../db/orm";
 
-export const userRepo = (orm: OrmType) => {
-  const upsert = ({ user_id = v4(), nickname }: { user_id?: string, nickname: string }) => {
-    let [user = null] = orm.query<User>({ from: "users", where: { user_id } });
-    if (!user) {
-      user = orm.insert({
-        into: "users",
-        data: { user_id, nickname },
-      });
-    } else {
-      user = orm.update<User>({
-        table: "users",
-        where: { user_id },
-        set: { nickname },
-      })[0];
-    }
-
-    return user;
-  };
-
-  const get = ({ user_id }: { user_id: string }) => {
-    const [user = null] = orm.query({ from: "users", where: { user_id } });
-    return user;
-  };
-
-  const all = () => {
-    return orm.query({ from: "users" });
+export const roleRepo = (orm: OrmType) => {
+  const all = ({ room_id }: { room_id: string }) => {
+    return orm.query<UserRole>({
+      from: "user_roles ur join users u using(user_id)",
+      where: { room_id },
+      select: ["user_id", "nickname", "room_id", "role"],
+    });
   };
 
   const setRole = ({
@@ -58,8 +38,6 @@ export const userRepo = (orm: OrmType) => {
   };
 
   return {
-    upsert,
-    get,
     all,
     setRole,
     getRole,

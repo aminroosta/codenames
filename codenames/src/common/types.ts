@@ -1,7 +1,7 @@
 import { APIEvent } from "solid-start";
 import { OrmType } from "~/api/db/orm";
 
-export type UserRole = 'red-operator'
+export type Role = 'red-operator'
   | 'blue-operator'
   | 'red-spymaster'
   | 'blue-spymaster'
@@ -21,6 +21,11 @@ export type AppApiEvent = APIEvent & {
     orm: OrmType;
     sid: string;
   }
+};
+
+export type User = {
+  user_id: string;
+  nickname: string;
 };
 
 export type Room = {
@@ -44,3 +49,9 @@ export type Clue = {
   created_at: Date;
 };
 
+export type UserRole = {
+  room_id: string;
+  user_id: string;
+  role: Role;
+  nickname: string;
+};

@@ -1,10 +1,10 @@
 import { For } from "solid-js";
-import { RoomStatus, UserRole } from "~/common/types";
+import { RoomStatus, Role } from "~/common/types";
 import Card from "~/components/Card";
 import "./Board.css";
 
 export default function Board(p: {
-  role: UserRole;
+  role: Role;
   cards: {
     image: string,
     color: 'red' | 'blue' | 'black' | 'neutral',

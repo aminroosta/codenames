@@ -1,5 +1,5 @@
 import { Show } from "solid-js";
-import { UserRole } from "~/common/types";
+import { Role } from "~/common/types";
 import Button from "./Button";
 import Card from "./Card";
 import "./Team.css";
@@ -9,8 +9,8 @@ export default function Team(p: {
   spymasters: string[];
   operatives: string[];
   cardCount: number;
-  role: 'operator' | 'spymaster' | 'none';
-  onJoin: (role: 'operator' | 'spymaster') => void;
+  role: Role;
+  onJoin: (role: Role) => void;
 }) {
   return (
     <div class={`team ${p.color}`}>
@@ -31,14 +31,20 @@ export default function Team(p: {
         <div>{p.operatives.join(", ") || "-"}</div>
       </div>
       <Show when={p.role == 'none'}>
-        <Button color="yellow" onClick={() => p.onJoin("operator")}>Join as Operative</Button>
+        <Button
+          color="yellow"
+          onClick={() => p.onJoin(`${p.color}-operator`)}
+        >Join as Operative</Button>
       </Show>
       <div class="section">
         <div>Spymaster(s)</div>
         <div>{p.spymasters.join(", ") || "-"}</div>
       </div>
       <Show when={p.role == 'none'}>
-        <Button color="yellow" onClick={() => p.onJoin("spymaster")}>Join as Spymaster</Button>
+        <Button
+          color="yellow"
+          onClick={() => p.onJoin(`${p.color}-spymaster`)}
+        >Join as Spymaster</Button>
       </Show>
     </div>
   );

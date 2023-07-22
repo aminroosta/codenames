@@ -16,14 +16,13 @@ create table if not exists rooms (
 
 create unique index if not exists room_name_idx on rooms(name);
 
-create table if not exists room_users (
+create table if not exists user_roles (
   room_id uuid not null references rooms(room_id),
   user_id uuid not null references users(user_id),
-  team text not null, -- red, blue
   role text not null -- spymaster, operative
 );
 
-create index if not exists room_users_room_id_user_id_idx on room_users(room_id, user_id);
+create index if not exists room_users_room_id_user_id_idx on user_roles(room_id, user_id);
 
 create table if not exists clues (
   clue_id uuid primary key not null,

@@ -1,5 +1,5 @@
 import { createSignal, For, Show } from "solid-js";
-import { RoomStatus, UserRole } from "~/common/types";
+import { RoomStatus, Role } from "~/common/types";
 import './Card.css';
 
 export default function Card(p: {
@@ -9,7 +9,7 @@ export default function Card(p: {
   index: number;
   votes: string[];
   status: RoomStatus;
-  role: UserRole;
+  role: Role;
 }) {
   const isSpymaster = () => ['red-spymaster', 'blue-spymaster'].includes(p.role);
   const isOperator = () => ['red-operator', 'blue-operator'].includes(p.status);
