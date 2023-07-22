@@ -1,7 +1,6 @@
 
 import { json } from "solid-start";
 import { clueRepo } from "~/api/repo/clue-repo";
-import { roleRepo } from "~/api/repo/role-repo";
 import { roomRepo } from "~/api/repo/room-repo";
 import { AppApiEvent } from "~/common/types";
 import { wsSend } from "../ws";

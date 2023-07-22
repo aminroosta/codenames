@@ -1,4 +1,4 @@
-import type { Role, Room, User, UserRole, Clue as ClueType } from "~/common/types";
+import type { Role, Room, User, UserRole, Clue as ClueType, RoomStatus } from "~/common/types";
 import { createEffect, createResource, createSignal, Show } from "solid-js";
 import { createStore } from "solid-js/store";
 import { useLocation } from "solid-start";
@@ -8,10 +8,10 @@ import Clue from "~/components/Clue";
 import "./room.css";
 import RoomSetup from "~/components/RoomSetup";
 import Menu from "~/components/Menu";
+import BoardTitle from "~/components/BoardStatus";
 
 export default function Room() {
   const { epochs, wsSend } = liveEpochs();
-  // createEffect(() => { console.log(epochs()); });
 
   const location = useLocation();
   const [room] = createResource(
@@ -84,13 +84,33 @@ function RoomImpl(p: {
 }) {
   p.wsSend('join', { room_id: p.room.room_id });
 
-  const [state, setState] = createStore({
-    status: p.room.status,
-  });
+  const status = () => {
+    const turns: RoomStatus[] = [
+      'red-spymaster',
+      'red-operator',
+      'blue-spymaster',
+      'blue-operator'
+    ];
+    const redCardCount = p.room.cards.filter(c => c.color == 'red').length;
+    const blueCardCount = p.room.cards.filter(c => c.color == 'blue').length;
+    let turnIndex = redCardCount > blueCardCount ? 0 : 2;
+    if (p.clues.length === 0) {
+      return turns[turnIndex];
+    };
+    turnIndex += p.clues
+      .map(c => c.status === 'active' ? 1 : 2)
+      .reduce((a, b) => a + b, 0);
+
+    return turns[turnIndex % turns.length];
+  };
 
   const cards = () => p.room.cards.map(c => ({ ...c, face: 'down' as const }));
   const role = () => p.roles.find(r => r.user_id === p.user.user_id)?.role || 'none';
   const clue = () => p.clues[p.clues.length - 1] || { word: '', count: 0, votes: [] };
+
+  // createEffect(() => {
+  //   console.log({ status: status(), role: role() });
+  // });
 
   const onClue = (clue: { word: string, count: number }) => {
     console.log(clue);
@@ -121,9 +141,9 @@ function RoomImpl(p: {
     <div class='room'>
       <TeamImpl color="red" room={p.room} roles={p.roles} user={p.user} />
       <div class="board-wrapper">
-        <div class='status'> {state.status} </div>
+        <BoardTitle status={status()} role={role()} />
         <Board
-          {...state}
+          status={status()}
           cards={cards()}
           role={role()}
           clue={clue()}
