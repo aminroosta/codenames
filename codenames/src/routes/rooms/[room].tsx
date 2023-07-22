@@ -7,12 +7,11 @@ import Team from "~/components/Team";
 import Clue from "~/components/Clue";
 import "./room.css";
 import RoomSetup from "~/components/RoomSetup";
+import Menu from "~/components/Menu";
 
 export default function Room() {
-  const epochs = liveEpochs();
-  createEffect(() => {
-    console.log(epochs());
-  });
+  const { epochs, wsSend } = liveEpochs();
+  // createEffect(() => { console.log(epochs()); });
 
   const location = useLocation();
   const [room] = createResource(
@@ -42,7 +41,7 @@ export default function Room() {
   );
 
 
-  const onClick = async ({ nickname }: { nickname: string }) => {
+  const onJoinRoom = async ({ nickname }: { nickname: string }) => {
     const user = await fetch(
       '/api/user', {
       method: 'PUT',
@@ -56,7 +55,7 @@ export default function Room() {
     fallback={
       <RoomSetup
         nickname=''
-        onClick={onClick}
+        onClick={onJoinRoom}
         buttonLabel="Join Room"
       />
     }
@@ -65,40 +64,77 @@ export default function Room() {
       when={room.latest && roles.latest && user.latest && clues.latest}
       fallback={<div>loading ...</div>}
     >
-      <RoomImpl room={room.latest} roles={roles.latest} user={user.latest} clues={clues.latest} />
+      <RoomImpl
+        room={room.latest}
+        roles={roles.latest}
+        user={user.latest}
+        clues={clues.latest}
+        wsSend={wsSend}
+      />
     </Show>
   </Show>
 }
 
-function RoomImpl(p: { room: Room, roles: UserRole[], user: User, clues: ClueType[] }) {
+function RoomImpl(p: {
+  room: Room,
+  roles: UserRole[],
+  user: User,
+  clues: ClueType[],
+  wsSend: (type: string, data: any) => void,
+}) {
+  p.wsSend('join', { room_id: p.room.room_id });
+
   const [state, setState] = createStore({
-    cards: p.room.cards.map(c => ({ ...c, face: 'down' })),
     status: p.room.status,
   });
 
+  const cards = () => p.room.cards.map(c => ({ ...c, face: 'down' as const }));
   const role = () => p.roles.find(r => r.user_id === p.user.user_id)?.role || 'none';
   const clue = () => p.clues[p.clues.length - 1] || { word: '', count: 0, votes: [] };
-  createEffect(() => { console.log({ role: role() }) });
 
   const onClue = (clue: { word: string, count: number }) => {
     console.log(clue);
   };
+  const onResetGame = () => fetch("/api/room", {
+    method: "PATCH",
+    body: JSON.stringify({ room_id: p.room.room_id }),
+  });
+  const onSwitchSides = () => fetch("/api/room/role", {
+    method: "POST",
+    body: JSON.stringify({ role: 'none', room_id: p.room.room_id }),
+  });
+  const onUpdateNickname = () => fetch(
+    '/api/user', {
+    method: 'PUT',
+    body: JSON.stringify({ nickname: '', room_id: p.room.room_id })
+  });
 
-  return <div class='room'>
-    <TeamImpl color="red" room={p.room} roles={p.roles} user={p.user} />
-    <div class="board-wrapper">
-      <div class='status'> {state.status} </div>
-      <Board
-        {...state}
-        role={role()}
-        clue={clue()}
-      />
-      <Show when={role().includes('spymaster')}>
-        <Clue onDone={onClue} />
-      </Show>
-    </div>
-    <TeamImpl color="blue" room={p.room} roles={p.roles} user={p.user} />
-  </div>;
+  return <div>
+    <Menu
+      nicknames={p.roles.map(r => r.nickname)}
+      role={role()}
+      nickname={p.user.nickname}
+      onResetGame={onResetGame}
+      onSwitchSides={onSwitchSides}
+      onUpdateNickname={onUpdateNickname}
+    />
+    <div class='room'>
+      <TeamImpl color="red" room={p.room} roles={p.roles} user={p.user} />
+      <div class="board-wrapper">
+        <div class='status'> {state.status} </div>
+        <Board
+          {...state}
+          cards={cards()}
+          role={role()}
+          clue={clue()}
+        />
+        <Show when={role().includes('spymaster')}>
+          <Clue onDone={onClue} />
+        </Show>
+      </div>
+      <TeamImpl color="blue" room={p.room} roles={p.roles} user={p.user} />
+    </div>;
+  </div>
 }
 
 function TeamImpl(p: {
@@ -141,24 +177,35 @@ function TeamImpl(p: {
 function liveEpochs() {
   const [epochs, setEpochs] = createSignal({ room: 0, roles: 0, user: 0, clues: 0 });
 
-  fetch('/api/ws')
+  let promise: Promise<WebSocket> = fetch('/api/ws')
     .then(r => r.json())
-    .then(({ port }) => {
-      const { hostname } = window.location;
-      const websocket = new WebSocket(`ws://${hostname}:${port}`);
+    .then(({ port }) => new Promise(
+      resolve => {
+        const { hostname, pathname } = window.location;
+        const ws = new WebSocket(`ws://${hostname}:${port}`);
+        ws.onopen = () => resolve(ws);
 
-      websocket.onmessage = event => {
-        const { type, data } = JSON.parse(event.data);
+        ws.onmessage = event => {
+          const { type, data } = JSON.parse(event.data);
 
-        if (type == 'epoch') {
-          setEpochs({ ...epochs(), ...data });
-        }
-      };
+          if (type == 'epoch') {
+            setEpochs({ ...epochs(), ...data });
+          }
+        };
 
-      websocket.onclose = _e => {
-        window.alert("websocket closed");
-      };
+        ws.onclose = _e => {
+          window.alert("websocket closed");
+        };
+
+      })
+    );
+
+  const wsSend = (type: string, data: any) => {
+    promise = promise.then((ws) => {
+      ws.send(JSON.stringify({ type, data }));
+      return ws;
     });
+  };
 
-  return epochs;
+  return { epochs, wsSend };
 }

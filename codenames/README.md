@@ -6,9 +6,11 @@ Components
 - [x] Home
 - [x] Room
 - [x] TeamInfo
-- RoomSetup
+- [x] RoomSetup
 - GameLog
 - BoardTitle
+- ChangeSides
+- ResetGame
 - [x] Board
 - [x] Card
 - [x] Clue

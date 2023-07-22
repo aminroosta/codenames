@@ -1,4 +1,4 @@
-import { For } from "solid-js";
+import { createEffect, For } from "solid-js";
 import { RoomStatus, Role } from "~/common/types";
 import Card from "~/components/Card";
 import "./Board.css";
@@ -24,7 +24,7 @@ export default function Board(p: {
           const index = p.cards.filter(c => c.color === card.color).indexOf(card);
           const votes = p.clue?.votes[i()] || [];
           return <Card
-            image={`card-${i()}.svg`}
+            image={card.image}
             color={card.color}
             face={card.face}
             index={index}

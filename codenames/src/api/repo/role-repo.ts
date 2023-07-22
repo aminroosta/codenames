@@ -4,9 +4,9 @@ import { OrmType } from "../db/orm";
 export const roleRepo = (orm: OrmType) => {
   const all = ({ room_id }: { room_id: string }) => {
     return orm.query<UserRole>({
-      from: "user_roles ur join users u using(user_id)",
-      where: { room_id },
-      select: ["user_id", "nickname", "room_id", "role"],
+      from: "users u join user_roles ur on u.user_id = ur.user_id",
+      where: { 'ur.room_id': room_id },
+      select: ["u.user_id", "u.nickname", "ur.room_id", "ur.role"],
     });
   };
 
@@ -37,9 +37,17 @@ export const roleRepo = (orm: OrmType) => {
     return { user_id, room_id, role: (userRole?.role || 'none') as Role };
   };
 
+  const removeRole = ({ user_id, room_id }: { user_id: string, room_id: string }) => {
+    orm.remove({
+      from: "user_roles",
+      where: { user_id, room_id },
+    });
+  };
+
   return {
     all,
     setRole,
     getRole,
+    removeRole,
   };
 };

@@ -46,7 +46,7 @@ export const roomRepo = (orm: OrmType) => {
   };
 
   const getShownCards = ({ room_id }: { room_id: string }) => {
-    const cards = orm.query<{card_idx: number}>({
+    const cards = orm.query<{ card_idx: number }>({
       from: 'shown_cards s join clues c using(clue_id)',
       where: { 'c.room_id': room_id },
       select: 's.card_idx'
@@ -55,8 +55,50 @@ export const roomRepo = (orm: OrmType) => {
     return cards.map(({ card_idx }) => card_idx);
   };
 
+  const reset = ({ room_id }: { room_id: string }) => {
+    const cards = generateCards();
+
+    const room = orm.update({
+      table: "rooms",
+      where: { room_id },
+      set: {
+        cards: JSON.stringify(cards),
+        status: 'lobby'
+      },
+    });
+
+    orm.update({
+      table: 'user_roles',
+      where: { room_id },
+      set: { role: 'none' }
+    });
+
+    const clue_ids = orm.query({
+      from: 'clues',
+      where: { room_id },
+      select: 'clue_id'
+    }).map(({ clue_id }) => `"${clue_id}"`)
+      .join(',');
+    clue_ids && orm.remove({
+      from: 'votes',
+      where: { 'clue_id in (?)': `(${clue_ids})` }
+    });
+
+    orm.remove({
+      from: 'clues',
+      where: { room_id }
+    });
+    orm.remove({
+      from: 'shown_cards',
+      where: { 'clue_id in (?)': `(${clue_ids})` }
+    });
+
+    return room;
+  };
+
   return {
     create,
+    reset,
     getByName,
     getById,
     updateStatus,
@@ -84,7 +126,7 @@ const generateCards = () => {
   const cards = [];
   for (let i = 0; i < colors.length; i++) {
     const idx = Math.floor(Math.random() * (279 - 0 + 1)) + 0;
-    const image = `card-${idx}.jpg`;
+    const image = `card-${idx}.svg`;
     cards.push({ image, color: colors[i] });
   }
 

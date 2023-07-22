@@ -1,0 +1,11 @@
+.menu {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 5px;
+}
+.menu .player-count {
+  margin-right: auto;
+  color: white;
+}

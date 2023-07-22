@@ -2,6 +2,7 @@ import { json } from "solid-start";
 import { roomRepo } from "~/api/repo/room-repo";
 import { userRepo } from "~/api/repo/user-repo";
 import { AppApiEvent } from "~/common/types";
+import { wsSend } from "./ws";
 
 export function GET({ locals: { orm, sid }, request }: AppApiEvent) {
   const url = new URL(request.url);
@@ -24,8 +25,16 @@ export async function POST(
   return json(room);
 }
 
-export function PATCH() {
-  // ...
+export async function PATCH({ locals: { orm, sid }, request }: AppApiEvent) {
+  const { room_id } = await new Response(request.body).json()
+  const room = roomRepo(orm).reset({ room_id });
+
+  wsSend({
+    room_id,
+    type: 'epoch',
+    data: { room: +new Date(), user: +new Date(), roles: +new Date(), clues: +new Date() }
+  });
+  return json(room);
 }
 
 export function DELETE() {
