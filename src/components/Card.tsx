@@ -18,16 +18,16 @@ export default function Card(p: {
   const canVote = () => isOperator() && p.status == p.role && p.face == 'down';
   const tint = () => (p.face == 'up' || isSpymaster() || p.status.endsWith('-won')) && p.status !== 'lobby';
 
-  const hueDeg = () => !tint() ? 0
-    : p.color == 'blue' ? 120
-      : p.color == 'red' ? 220
-        : 0;
-  const hueSat = () => !tint() ? 100 : 250;
+  const cssFilter = () => {
+    const deg = !tint() ? 0 : p.color == 'blue' ? 120 : p.color == 'red' ? 220 : 0;
+    const sat = !tint() ? 100 : 250;
+    return `hue-rotate(${deg}deg) saturate(${sat}%)`;
+  }
 
   const yCalc = () => {
     const step = p.color == 'blue' || p.color == 'red' ? 100 / 8.0
       : p.color == 'neutral' ? 100 / 5.0 : 0;
-    return `calc(${step.toFixed(2)}% * ${p.index} - 2px)`;
+    return `calc(${step.toFixed(2)}% * ${p.index} - ${p.color != 'black' ? 2 : 0}px)`;
   }
 
   const onToggleVote = () => {
@@ -47,7 +47,7 @@ export default function Card(p: {
         alt={p.image}
         onClick={onToggleVote}
         style={`
-          filter: hue-rotate(${hueDeg()}deg) saturate(${hueSat()}%);
+          filter: ${cssFilter()};
         `} />
       <Show when={p.face === 'up' || (isSpymaster() && p.color === 'black')}>
         <div class="face-up" style={`
