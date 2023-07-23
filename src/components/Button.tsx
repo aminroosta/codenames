@@ -10,9 +10,9 @@ export default function Button(p: {
   ref?: Ref<HTMLButtonElement>;
 }) {
   return (
-    <div>
+    <div class={p.class}>
       <button
-        class={`button ${p.color} ${p.class || ''}`}
+        class={`button ${p.color}`}
         onClick={p.onClick}
         disabled={p.disabled}
         ref={p.ref}
