@@ -25,5 +25,26 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v4
         with:
-          push: true
-          tags: aminroosta/codenames:latest
+          tags: aminroosta/codenames:${{ github.sha }}
+          push: ${{ github.ref == 'refs/heads/master' }}
+
+  update-manifest:
+    needs: [docker]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          repository: aminroosta/intotwo-config
+          ref: 'master'
+          token:  ${{ secrets.G_TOKEN }}
+      - name: setup git config
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
+          echo ${{ github.sha }}
+          sed -i "s#aminroosta.*#aminroosta/codenames:${{ github.sha }}#g" dev/templates/intotwo-codenames-deployment.yaml
+          git add -A
+          git commit -am "Update codenames image tag to ${{ github.sha }}"
+
+      - run: echo ${{ github }}
+      - run: git push origin master
