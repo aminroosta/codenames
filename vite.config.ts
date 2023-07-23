@@ -4,6 +4,6 @@ import { defineConfig } from "vite";
 export default defineConfig({
   plugins: [solid({ ssr: false })],
   ssr: {
-    external: ["ws", "uuid", "bip39", "better-sqlite3"],
+    external: ["better-sqlite3"],
   }
 });
