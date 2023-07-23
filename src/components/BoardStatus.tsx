@@ -1,3 +1,4 @@
+import { createEffect, createSignal, For } from "solid-js";
 import { Role, RoomStatus } from "~/common/types";
 import "./BoardStatus.css";
 
@@ -7,11 +8,11 @@ export default function BoardTitle(p: {
 }) {
 
   const title = () => {
-    if(p.status == 'red-won') {
+    if (p.status == 'red-won') {
       return 'Red team wins!';
     }
 
-    if(p.status == 'blue-won') {
+    if (p.status == 'blue-won') {
       return 'Blue team wins!';
     }
 
@@ -67,6 +68,26 @@ export default function BoardTitle(p: {
 
     return p.status;
   };
+  const [text, setText] = createSignal('');
 
-  return <div class='board-status'> {title()} </div>
+  let timeoutId: any;
+  let lastText = '';
+  let index = 0;
+
+  function type() {
+    const t = title();
+    clearTimeout(timeoutId);
+    timeoutId = null;
+    if (lastText != t) {
+      lastText = t;
+      index = 0;
+    }
+    if (index <= t.length) {
+      setText(t.slice(0, index++));
+      timeoutId = setTimeout(type, 30);
+    }
+  }
+  createEffect(() => { type(); });
+
+  return <div class='board-status'> {text()} </div>
 }
