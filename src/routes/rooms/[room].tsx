@@ -172,10 +172,10 @@ function RoomImpl(p: {
       onSwitchSides={onSwitchSides}
       onUpdateNickname={onUpdateNickname}
     />
+    <BoardTitle status={status()} role={role()} />
     <div class='room'>
       <TeamImpl color="red" room={p.room} roles={p.roles} user={p.user} />
       <div class="board-wrapper">
-        <BoardTitle status={status()} role={role()} />
         <Board
           status={status()}
           cards={cards()}

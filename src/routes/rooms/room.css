@@ -10,9 +10,7 @@
   flex-direction: column;
   gap: 10px;
 }
-.room .team {
-  margin-top: 42px;
-}
+
 .room .end-guessing {
   margin: 0 auto;
 }
