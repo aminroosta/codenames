@@ -26,7 +26,7 @@ export async function POST(
   wsSend({
     room_id,
     type: 'epoch',
-    data: { clues: +new Date() }
+    data: { clues: +new Date(), votes: +new Date() }
   });
 
   return json(clue);

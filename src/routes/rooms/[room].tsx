@@ -1,6 +1,6 @@
 import type { Role, Room, User, UserRole, Clue as ClueType, RoomStatus, Vote } from "~/common/types";
-import { createEffect, createResource, createSignal, Show } from "solid-js";
-import { createStore } from "solid-js/store";
+import { createResource, createSignal, Show } from "solid-js";
+import { Transition } from "solid-transition-group";
 import { useLocation } from "solid-start";
 import Board from "~/components/Board";
 import Team from "~/components/Team";
@@ -45,9 +45,9 @@ export default function Room() {
   const [votes] = createResource(
     () => clues.latest && epochs().votes,
     () => {
-      if (!clues.latest.length) return [];
-      const clue_id = clues.latest[clues.latest.length - 1].clue_id;
-      return fetch(`/api/vote?clue_id=${clue_id}`).then(r => r.json());
+      const clue = clues.latest.find(c => c.status == 'active');
+      if (!clue) return [];
+      return fetch(`/api/vote?clue_id=${clue.clue_id}`).then(r => r.json());
     }
   );
 
@@ -185,9 +185,11 @@ function RoomImpl(p: {
           onToggleVote={onToggleVote}
           onShowCard={onShowCard}
         />
-        <Show when={role().includes('spymaster') && role() == status()}>
-          <Clue onDone={onClue} />
-        </Show>
+        <Transition name="fade">
+          <Show when={role().includes('spymaster') && role() == status()}>
+            <Clue onDone={onClue} />
+          </Show>
+        </Transition>
         <Show when={clue()?.status === "active"}>
           <ClueDisplay
             word={clue().word}

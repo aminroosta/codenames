@@ -72,3 +72,6 @@
 .clue .number:not(:last-child) {
   margin-right: 5px;
 }
+.clue button {
+  height: 100%;
+}

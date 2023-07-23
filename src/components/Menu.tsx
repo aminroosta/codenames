@@ -2,6 +2,7 @@
 import { Show } from "solid-js";
 import { Role } from "~/common/types";
 import Button from "./Button";
+import { Transition } from "solid-transition-group";
 import "./Menu.css";
 
 export default function Menu(p: {
@@ -20,9 +21,11 @@ export default function Menu(p: {
     <div class="player-count">
       Players: {p.nicknames.length}
     </div>
-    <Show when={p.role !== 'none'}>
-      <Button color="yellow" onClick={p.onSwitchSides}> Switch Sides </Button>
-    </Show>
+    <Transition name="fade">
+      <Show when={p.role !== 'none'}>
+        <Button color="yellow" onClick={p.onSwitchSides}> Switch Sides </Button>
+      </Show>
+    </Transition>
     <Button color="yellow" onClick={p.onResetGame}> Reset Game </Button>
     <Button color="yellow" onClick={p.onUpdateNickname}> {p.nickname} </Button>
   </div>;

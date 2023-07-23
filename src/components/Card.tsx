@@ -60,9 +60,9 @@ export default function Card(p: {
       </Show>
       <Show when={isOperator() && p.votes.length > 0}>
         <div class="vote-count">{p.votes.length}</div>
+        <div class="votes">{p.votes.join(', ')}</div>
       </Show>
       <Show when={canVote()}>
-        <div class="votes">{p.votes.join(', ')}</div>
         <button class="tap-card" onClick={p.onShowCard} />
       </Show>
     </div>

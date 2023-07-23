@@ -1,3 +1,4 @@
+import { Ref } from "solid-js";
 import "./Button.css";
 
 export default function Button(p: {
@@ -6,14 +7,18 @@ export default function Button(p: {
   onClick?: () => void;
   children?: any;
   disabled?: boolean;
+  ref?: Ref<HTMLButtonElement>;
 }) {
   return (
-    <button
-      class={`button ${p.color} ${p.class || ''}`}
-      onClick={p.onClick}
-      disabled={p.disabled}
-    >
-      {p.children}
-    </button>
+    <div>
+      <button
+        class={`button ${p.color} ${p.class || ''}`}
+        onClick={p.onClick}
+        disabled={p.disabled}
+        ref={p.ref}
+      >
+        {p.children}
+      </button>
+    </div>
   );
 }

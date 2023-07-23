@@ -123,10 +123,12 @@ const generateCards = () => {
   ];
   shuffleArray(colors);
 
-  const cards = [];
-  for (let i = 0; i < colors.length; i++) {
+  const cards: { image: string, color: string }[] = [];
+
+  for (let i = 0; cards.length < colors.length; i++) {
     const idx = Math.floor(Math.random() * (279 - 0 + 1)) + 0;
     const image = `card-${idx}.svg`;
+    if (cards.find(c => c.image === image)) { continue; }
     cards.push({ image, color: colors[i] });
   }
 
