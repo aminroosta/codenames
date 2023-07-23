@@ -103,7 +103,7 @@ export const wsSend = ({
 export function GET({ locals }: AppApiEvent) {
   orm = locals.orm;
   setupWebsocketServer();
-  const port = globalThis.server ? 3000 : 8181;
+  const port = globalThis.server ? 80 : 8181;
   return json({ port });
 }
 

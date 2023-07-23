@@ -264,8 +264,12 @@ function liveEpochs() {
     .then(r => r.json())
     .then(({ port }) => new Promise(
       resolve => {
-        const { hostname, pathname } = window.location;
-        const ws = new WebSocket(`ws://${hostname}:${port}`);
+        const { hostname } = window.location;
+        const ws = new WebSocket(
+          port == 80 ?
+            `wss://${hostname}` :
+            `ws://${hostname}:${port}`
+        );
         ws.onopen = () => resolve(ws);
 
         ws.onmessage = event => {
