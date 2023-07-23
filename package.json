@@ -1,37 +1,30 @@
 {
   "name": "codenames",
-  "version": "0.1.0",
-  "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "test": "jest --watch"
+    "dev": "solid-start dev",
+    "build": "solid-start build",
+    "start": "node -r ./preload.cjs ./dist/server.js"
+  },
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "^18.11.18",
+    "esbuild": "^0.14.54",
+    "postcss": "^8.4.21",
+    "solid-start-node": "^0.2.19",
+    "typescript": "^4.9.4",
+    "vite": "^4.1.4"
   },
   "dependencies": {
-    "@types/node": "20.4.2",
-    "@types/react": "18.2.15",
-    "@types/react-dom": "18.2.7",
-    "autoprefixer": "10.4.14",
-    "better-sqlite3": "^8.4.0",
-    "eslint": "8.45.0",
-    "eslint-config-next": "13.4.10",
-    "next": "13.4.10",
-    "postcss": "8.4.26",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "tailwindcss": "3.3.3",
-    "typescript": "5.1.6"
+    "@solidjs/meta": "^0.28.2",
+    "@solidjs/router": "^0.8.2",
+    "better-sqlite3": "^8.5.0",
+    "solid-js": "^1.7.2",
+    "solid-start": "^0.2.26",
+    "undici": "^5.15.1",
+    "uuid": "^9.0.0",
+    "ws": "^8.13.0"
   },
-  "devDependencies": {
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^14.0.0",
-    "@types/better-sqlite3": "^7.6.4",
-    "@types/uuid": "^9.0.2",
-    "bip39": "^3.1.0",
-    "jest": "^29.6.1",
-    "jest-environment-jsdom": "^29.6.1",
-    "uuid": "^9.0.0"
+  "engines": {
+    "node": ">=16.8"
   }
 }
