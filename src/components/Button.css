@@ -13,8 +13,10 @@
   width: fit-content;
 }
 
-.button:disabled {
+.button.button:disabled {
   cursor: not-allowed;
+  background: gray;
+  border: none;
 }
 .button:active {
   transform: translateY(-2px);

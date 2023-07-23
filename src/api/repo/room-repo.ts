@@ -125,7 +125,8 @@ const generateCards = () => {
 
   const cards: { image: string, color: string }[] = [];
 
-  for (let i = 0; cards.length < colors.length; i++) {
+  while (cards.length < colors.length) {
+    const i = cards.length;
     const idx = Math.floor(Math.random() * (279 - 0 + 1)) + 0;
     const image = `card-${idx}.svg`;
     if (cards.find(c => c.image === image)) { continue; }

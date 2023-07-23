@@ -19,9 +19,11 @@ export default function Card(p: {
   const tint = () => (p.face == 'up' || isSpymaster() || p.status.endsWith('-won')) && p.status !== 'lobby';
 
   const cssFilter = () => {
-    const deg = !tint() ? 0 : p.color == 'blue' ? 120 : p.color == 'red' ? 220 : 0;
-    const sat = !tint() ? 100 : 250;
-    return `hue-rotate(${deg}deg) saturate(${sat}%)`;
+    if (!tint()) return '';
+    if (p.color == 'blue') return 'filter: hue-rotate(120deg) saturate(250%)';
+    if (p.color == 'red') return 'filter: hue-rotate(220deg) saturate(250%)';
+    if (p.color == 'black') return 'filter: contrast(.5)';
+    return 'none';
   }
 
   const yCalc = () => {
@@ -46,10 +48,8 @@ export default function Card(p: {
         src={'/cards/' + p.image}
         alt={p.image}
         onClick={onToggleVote}
-        style={`
-          filter: ${cssFilter()};
-        `} />
-      <Show when={p.face === 'up' || (isSpymaster() && p.color === 'black')}>
+        style={cssFilter()} />
+      <Show when={p.face === 'up' || p.status.endsWith("-won")}>
         <div class="face-up" style={`
             background-position-y: ${yCalc()};
             background-image: url(/docs/${p.color}.png);
