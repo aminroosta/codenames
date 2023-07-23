@@ -7,6 +7,14 @@ export default function BoardTitle(p: {
 }) {
 
   const title = () => {
+    if(p.status == 'red-won') {
+      return 'Red team wins!';
+    }
+
+    if(p.status == 'blue-won') {
+      return 'Blue team wins!';
+    }
+
     if (
       (p.status == 'red-operator' && p.role == 'red-operator') ||
       (p.status == 'blue-operator' && p.role == 'blue-operator')

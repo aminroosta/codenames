@@ -37,7 +37,7 @@ export type Room = {
     color: 'red' | 'blue' | 'black' | 'neutral',
     face: 'up' | 'down'
   }[];
-  status: RoomStatus;
+  status: 'lobby' | 'red-won' | 'blue-won';
 };
 
 export type Clue = {

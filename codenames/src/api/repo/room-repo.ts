@@ -49,7 +49,7 @@ export const roomRepo = (orm: OrmType) => {
 
   const updateStatus = ({ room_id, status }: {
     room_id: string,
-    status: 'lobby' | 'playing' | 'finished'
+    status: 'lobby' | 'red-won' | 'blue-won'
   }) => {
     const [room] = orm.update<any>({
       table: 'rooms',
@@ -87,24 +87,9 @@ export const roomRepo = (orm: OrmType) => {
       set: { role: 'none' }
     });
 
-    const clue_ids = orm.query({
-      from: 'clues',
-      where: { room_id },
-      select: 'clue_id'
-    }).map(({ clue_id }) => `"${clue_id}"`)
-      .join(',');
-    clue_ids && orm.remove({
-      from: 'votes',
-      where: { 'clue_id in (?)': `(${clue_ids})` }
-    });
-
     orm.remove({
       from: 'clues',
       where: { room_id }
-    });
-    orm.remove({
-      from: 'shown_cards',
-      where: { 'clue_id in (?)': `(${clue_ids})` }
     });
 
     return room;

@@ -25,7 +25,7 @@ const sessionMiddleware = ({ forward }: MiddlewareInput) => {
 
 const repoMiddleware = ({ forward }: MiddlewareInput) => {
   return async (event: FetchEvent) => {
-    const orm = getOrm("/tmp/db.sqlite");
+    const orm = getOrm("/tmp/codenames.sqlite");
     event.locals.orm = orm;
     return await forward(event);
   };

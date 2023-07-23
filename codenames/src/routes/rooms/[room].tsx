@@ -98,6 +98,9 @@ function RoomImpl(p: {
   p.wsSend('join', { room_id: p.room.room_id });
 
   const status = () => {
+    if (p.room.status !== 'lobby') {
+      return p.room.status;
+    }
     const turns: RoomStatus[] = [
       'red-spymaster',
       'red-operator',
@@ -120,10 +123,6 @@ function RoomImpl(p: {
   const cards = () => p.room.cards;
   const role = () => p.roles.find(r => r.user_id === p.user.user_id)?.role || 'none';
   const clue = () => p.clues.filter(c => c.status == 'active')[0] || { word: '', count: 0 };
-
-  createEffect(() => {
-    console.log({ status: status(), role: role(), room: p.room });
-  });
 
   const onClue = (clue: { word: string, count: number }) => {
     fetch("/api/room/clue", {
@@ -228,7 +227,9 @@ function TeamImpl(p: {
     .map(r => r.nickname)
     .sort();
 
-  const cardCount = () => p.room.cards.filter(c => c.color === p.color).length;
+  const cardCount = () => p.room.cards.filter(
+    c => c.color === p.color && c.face === 'down'
+  ).length;
   const role = () => {
     const user_id = p.user.user_id;
     return p.roles.find(r => r.user_id == user_id)?.role || 'none';
@@ -257,10 +258,6 @@ function liveEpochs() {
     user: 0,
     clues: 0,
     votes: 0,
-  });
-
-  createEffect(() => {
-    console.log(epochs());
   });
 
   let promise: Promise<WebSocket> = fetch('/api/ws')

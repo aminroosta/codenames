@@ -15,20 +15,21 @@ export default function Card(p: {
 }) {
   const isSpymaster = () => ['red-spymaster', 'blue-spymaster'].includes(p.role);
   const isOperator = () => ['red-operator', 'blue-operator'].includes(p.status);
-  const canVote = () => isOperator() && p.status == p.role;
-  const tint = () => !(p.face == 'up' || isSpymaster()) || p.role == 'none';
+  const canVote = () => isOperator() && p.status == p.role && p.face == 'down';
+  const tint = () => (p.face == 'up' || isSpymaster() || p.status.endsWith('-won')) && p.status !== 'lobby';
 
-  const hueDeg = () => tint() ? 0 : p.color == 'blue' ? 120 : p.color == 'red' ? 220 : 0;
-  const hueSat = () => tint() ? 100 : 250;
+  const hueDeg = () => !tint() ? 0
+    : p.color == 'blue' ? 120
+      : p.color == 'red' ? 220
+        : 0;
+  const hueSat = () => !tint() ? 100 : 250;
 
   const yCalc = () => {
     const step = p.color == 'blue' || p.color == 'red' ? 100 / 8.0
       : p.color == 'neutral' ? 100 / 5.0 : 0;
     return `calc(${step.toFixed(2)}% * ${p.index} - 2px)`;
   }
-  // createEffect(() => {
-  //   console.log({ status: p.status, role: p.role, votes: p.votes });
-  // });
+
   const onToggleVote = () => {
     if (canVote()) {
       p.onToggleVote();
@@ -48,17 +49,20 @@ export default function Card(p: {
         style={`
           filter: hue-rotate(${hueDeg()}deg) saturate(${hueSat()}%);
         `} />
-      <Show when={p.face === 'up'}>
+      <Show when={p.face === 'up' || (isSpymaster() && p.color === 'black')}>
         <div class="face-up" style={`
             background-position-y: ${yCalc()};
             background-image: url(/docs/${p.color}.png);
+            background-repeat: no-repeat;
+            background-position-x: ${p.color == 'black' ? '50%' : 0};
+            height: ${p.color == 'black' ? '100%' : '90%'};
           `} />
       </Show>
       <Show when={isOperator() && p.votes.length > 0}>
         <div class="vote-count">{p.votes.length}</div>
-        <div class="votes">{p.votes.join(', ')}</div>
       </Show>
-      <Show when={isOperator() && p.status == p.role && p.face == 'down'}>
+      <Show when={canVote()}>
+        <div class="votes">{p.votes.join(', ')}</div>
         <button class="tap-card" onClick={p.onShowCard} />
       </Show>
     </div>

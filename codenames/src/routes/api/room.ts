@@ -29,7 +29,12 @@ export async function POST(
 
 export async function PATCH({ locals: { orm, sid }, request }: AppApiEvent) {
   const { room_id } = await new Response(request.body).json()
-  const room = roomRepo(orm).reset({ room_id });
+  let room;
+  try {
+    room = roomRepo(orm).reset({ room_id });
+  } catch (e) {
+    console.log(e);
+  }
 
   wsSend({
     room_id,

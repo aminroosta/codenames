@@ -16,7 +16,6 @@ export default function Board(p: {
   onToggleVote: (card_idx: number) => void;
   onShowCard: (card_idx: number) => void;
 }) {
-
   return (
     <div class="board">
       <Index each={p.cards}>

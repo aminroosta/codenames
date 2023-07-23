@@ -17,7 +17,7 @@ export default function Home() {
   const votes = ['Amin', 'Negar', 'Masood'];
   return (
     <div class="card-story">
-      <Card image="card-0.svg" color="blue" face="up" index={0} votes={[]} status='red-operator' role='red-operator' />
+      <Card image="card-0.svg" color="black" face="up" index={0} votes={[]} status='red-operator' role='red-operator' />
 
       <For each={[0, 1, 2, 3, 4, 6, 7, 8]}>
         {(i) => <Card image={`card-${i}.svg`} color="red" face="down" index={i} votes={[]} status='lobby' role='red-operator' />}

@@ -38,14 +38,14 @@ create index if not exists clues_room_id_created_at_idx on clues(room_id, create
 create unique index if not exists clues_room_id_status_idx on clues(room_id) where status = 'active';
 
 create table if not exists shown_cards (
-  clue_id uuid not null references clues(clue_id),
+  clue_id uuid not null references clues(clue_id) on delete cascade,
   user_id uuid not null references users(user_id),
   card_idx int not null,
   created_at timestamp not null default current_timestamp
 );
 
 create table if not exists votes (
-  clue_id uuid not null references clues(clue_id),
+  clue_id uuid not null references clues(clue_id) on delete cascade,
   user_id uuid not null references users(user_id),
   card_idx int not null
 );

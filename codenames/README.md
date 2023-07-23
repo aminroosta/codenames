@@ -14,5 +14,8 @@ Components
 - [x] Card
 - [x] Clue
 - [X] RoomTitle:
+- [X] Giving Clues
+- Wrong guess finishes the clue
+- Completing the cards wins the game
+- Picking red loses the game
 - GameLog
-- [ ] Giving Clues

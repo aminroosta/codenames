@@ -28,10 +28,21 @@ export const cardRepo = (orm: OrmType) => {
     card_idx: number,
     user_id: string
   }) => {
-    return orm.insert({
+    const card = orm.insert({
       into: 'shown_cards',
       data: { clue_id, card_idx, user_id }
     });
+
+    let result = orm.query({
+      from: 'rooms r join clues c using(room_id)',
+      where: { 'c.clue_id': card.clue_id },
+      select: 'r.cards'
+    });
+    const cards = JSON.parse(result[0].cards as string);
+    return {
+      ...card,
+      color: cards[card.card_idx].color as string
+    };
   };
 
   return {
