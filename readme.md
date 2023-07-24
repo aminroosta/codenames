@@ -19,5 +19,7 @@ Components
 - [x] Completing the cards wins the game
 - [x] Picking red loses the game
 - GameLog
+- show a better error message for disconnected instead of websocket closed
+- show nickname of players joined too
 - keep role when page refresh
 - disconnected: grey name, keep role. reconnected: white name

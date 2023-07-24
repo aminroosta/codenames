@@ -20,7 +20,7 @@ export default function BoardTitle(p: {
       (p.status == 'red-operator' && p.role == 'red-operator') ||
       (p.status == 'blue-operator' && p.role == 'blue-operator')
     ) {
-      return 'Try to guess a word.';
+      return 'Try to guess a card.';
     }
 
     if (
