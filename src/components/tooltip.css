@@ -1,77 +1,21 @@
-/* The tooltip element */
-.tooltip {
-  position: absolute;
-  display: block;
+/* Tooltip text */
+.tooltip + .tooltip-text {
   visibility: hidden;
-  opacity: 0;
-  transition: opacity 0.3s;
+  max-width: 120px;
   background-color: black;
-  color: #ffffff;
-  padding: 8px;
-  border-radius: 4px;
-  box-shadow: 0px 2px 4px rgba(0,0,0,0.1);
-  z-index: 10;
-}
-
-/* The arrow of the tooltip */
-.tooltip::after {
-  content: "";
+  color: #fff;
+  text-align: center;
+  padding: 8px 10px;
+  border-radius: 5px;
+ 
+  /* Position the tooltip text - see examples below! */
   position: absolute;
-  border-style: solid;
+  z-index: 1;
+  left: 5px;
+  top: 20px;
 }
 
-/* Position the tooltip above the trigger element */
-.tooltip.top {
-  bottom: calc(100% + 8px);
-}
-
-/* Position the arrow below the tooltip */
-.tooltip.top::after {
-  top: 100%;
-  left: 50%;
-  margin-left: -6px;
-  border-width: 6px;
-  border-color: #616161 transparent transparent transparent;
-}
-
-/* Position the tooltip below the trigger element */
-.tooltip.bottom {
-  top: calc(100% + 8px);
-}
-
-/* Position the arrow above the tooltip */
-.tooltip.bottom::after {
-  bottom: 100%;
-  left: 50%;
-  margin-left: -6px;
-  border-width: 6px;
-  border-color: transparent transparent #616161 transparent;
-}
-
-/* Position the tooltip to the left of the trigger element */
-.tooltip.left {
-  right: calc(100% + 8px);
-}
-
-/* Position the arrow to the right of the tooltip */
-.tooltip.left::after {
-  top: 50%;
-  right: -6px;
-  margin-top: -6px;
-  border-width: 6px;
-  border-color: transparent #616161 transparent transparent;
-}
-
-/* Position the tooltip to the right of the trigger element */
-.tooltip.right {
-  left: calc(100% + 8px);
-}
-
-/* Position the arrow to the left of the tooltip */
-.tooltip.right::after {
-  top: 0%;
-  left: -6px;
-  margin-top: -6px;
-  border-width: 6px;
-  border-color: transparent transparent transparent #616161;
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover + .tooltip-text {
+  visibility: visible;
 }

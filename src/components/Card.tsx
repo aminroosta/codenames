@@ -1,6 +1,7 @@
 import { createEffect, createSignal, For, Show } from "solid-js";
 import { RoomStatus, Role } from "~/common/types";
 import './Card.css';
+import './tooltip.css';
 
 export default function Card(p: {
   image: string;
@@ -60,8 +61,8 @@ export default function Card(p: {
           `} />
       </Show>
       <Show when={isOperator() && p.votes.length > 0}>
-        <div class="vote-count">{p.votes.length}</div>
-        <div class="votes">{p.votes.join(', ')}</div>
+        <div class="vote-count tooltip">{p.votes.length}</div>
+        <div class="tooltip-text">{p.votes.join(', ')}</div>
       </Show>
       <Show when={canVote()}>
         <button class="tap-card" onClick={p.onShowCard} />

@@ -15,7 +15,8 @@ Components
 - [x] Clue
 - [X] RoomTitle:
 - [X] Giving Clues
-- Wrong guess finishes the clue
-- Completing the cards wins the game
-- Picking red loses the game
+- [x] Wrong guess finishes the clue
+- [x] Completing the cards wins the game
+- [x] Picking red loses the game
 - GameLog
+- disconnected: grey name, keep role. reconnected: white name
