@@ -2,6 +2,7 @@ import { createSignal, For, Show, createEffect } from "solid-js";
 import { clickOutside } from "~/common/directives";
 import Button from "./Button";
 import "./Clue.css";
+import Tooltip from "./Tooltip";
 
 export default function Clue(p: {
   onDone: (_: { word: string; count: number }) => void;
@@ -61,7 +62,11 @@ export default function Clue(p: {
         }}
         disabled={clue().word.length === 0 || clue().count === null}
       >
-        Give Clue
+        <Show when={clue().word.length === 0 || clue().count === null} fallback="Give Clue">
+          <Tooltip label="Give Clue" position="top" hasArrow>
+            Type your clue and select a count
+          </Tooltip>
+        </Show>
       </Button>
     </div>
   );

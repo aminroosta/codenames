@@ -19,4 +19,5 @@ Components
 - [x] Completing the cards wins the game
 - [x] Picking red loses the game
 - GameLog
+- keep role when page refresh
 - disconnected: grey name, keep role. reconnected: white name

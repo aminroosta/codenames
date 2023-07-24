@@ -11,6 +11,8 @@
   width: fit-content;
   margin-bottom: 10px;
   margin-top: -10px;
+  min-height: 44.5px;
+  box-sizing: border-box;
 }
 
 
