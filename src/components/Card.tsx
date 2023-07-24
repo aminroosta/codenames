@@ -22,7 +22,8 @@ export default function Card(p: {
     if (!tint()) return '';
     if (p.color == 'blue') return 'filter: hue-rotate(120deg) saturate(250%)';
     if (p.color == 'red') return 'filter: hue-rotate(220deg) saturate(250%)';
-    if (p.color == 'black') return 'filter: contrast(.5)';
+    if (p.color == 'black') return "filter: invert(1)";
+
     return 'none';
   }
 
@@ -49,7 +50,7 @@ export default function Card(p: {
         alt={p.image}
         onClick={onToggleVote}
         style={cssFilter()} />
-      <Show when={p.face === 'up' || p.status.endsWith("-won")}>
+      <Show when={p.face === 'up'}>
         <div class="face-up" style={`
             background-position-y: ${yCalc()};
             background-image: url(/docs/${p.color}.png);
