@@ -23,3 +23,4 @@ Components
 - show nickname of players joined too
 - keep role when page refresh
 - disconnected: grey name, keep role. reconnected: white name
+- change room bg based on team color
