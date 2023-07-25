@@ -32,7 +32,7 @@ export default function Card(p: {
   const yCalc = () => {
     const step = p.color == 'blue' || p.color == 'red' ? 100 / 8.0
       : p.color == 'neutral' ? 100 / 5.0 : 0;
-      return `calc(${step.toFixed(2)}% * ${p.index} -${p.color != 'black' ? 2 : 0}px)`;
+      return `calc(${step.toFixed(2)}% * ${p.index} - ${p.color != 'black' ? 2 : 0}px)`;
   }
 
   const onToggleVote = () => {
