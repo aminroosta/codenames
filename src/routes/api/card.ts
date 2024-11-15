@@ -35,7 +35,8 @@ export async function POST(
   const room = roomRepo(orm).getById({ room_id })!;
   if (shownCard.color === 'black') {
     clueRepo(orm).finishClue({ clue_id });
-    roomRepo(orm).updateStatus({ room_id, status: `${expectedColor}-won` });
+    const oppositeColor = expectedColor == 'blue' ? 'red' : 'blue';
+    roomRepo(orm).updateStatus({ room_id, status: `${oppositeColor}-won` });
   }
   const blueLeft = room.cards.filter(c => c.face === 'down' && c.color == 'blue');
   const redLeft = room.cards.filter(c => c.face === 'down' && c.color == 'red');

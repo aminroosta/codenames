@@ -117,7 +117,10 @@ const generateCards = () => {
   const colors = [
     "black",
     "blue", "blue", "blue", "blue", "blue", "blue", "blue",
+    "blue",
+    "neutral", "neutral", "neutral",
     "neutral", "neutral", "neutral", "neutral",
+    "red",
     "red", "red", "red", "red", "red", "red", "red",
     Math.random() > 0.5 ? "red" : "blue",
   ];
